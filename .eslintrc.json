@@ -1,7 +1,8 @@
 {
     "env": {
         "browser": true,
-        "es2021": true
+        "es2021": true,
+        "node":true
     },
     "extends": [
         "airbnb",
@@ -13,13 +14,15 @@
         "plugin:import/warnings",
         "plugin:import/typescript",
         "plugin:prettier/recommended",
-        "plugin:@tanstack/eslint-plugin-query/recommended"
+        "plugin:@tanstack/eslint-plugin-query/recommended",
+        "next/core-web-vitals", // ✅ Next.js 권장 ESLint 설정 추가
+        "prettier" // ✅ Prettier 관련 설정 추가
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": 2021,
         "sourceType": "module",
-        "project": ["tsconfig.app.json", "tsconfig.node.json"],
+        "project": ["tsconfig.json"],
         "ecmaFeatures": {
             "jsx": true
         }
@@ -38,5 +41,6 @@
         "react": {
             "version": "detect"
         }
-    }
+    },
+    "ignorePatterns": ["build", "dist", "public"]
 }
