@@ -13,10 +13,11 @@
         "plugin:import/errors",
         "plugin:import/warnings",
         "plugin:import/typescript",
-        "plugin:prettier/recommended",
         "plugin:@tanstack/eslint-plugin-query/recommended",
         "next/core-web-vitals", // ✅ Next.js 권장 ESLint 설정 추가
-        "prettier" // ✅ Prettier 관련 설정 추가
+        "plugin:prettier/recommended",
+        "prettier"
+
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -42,5 +43,5 @@
             "version": "detect"
         }
     },
-    "ignorePatterns": ["build", "dist", "public"]
+    "ignorePatterns": ["build", "dist", "public","tailwind.config.js","vitest.config.ts"]
 }

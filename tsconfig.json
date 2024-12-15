@@ -21,10 +21,16 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "node_modules/*": ["./node_modules/*"]
+    },
     "plugins": [
       {
         "name": "next"
-      }
+      },
+      
     ],
     "esModuleInterop": true,
     "allowJs": true,
@@ -35,9 +41,15 @@
     "./dist/types/**/*.ts",
     "./next-env.d.ts",
     "src",
-    ".next/types/**/*.ts"
-, "__test__"  ],
+    ".next/types/**/*.ts",
+    "__tests__",
+    "e2e/**/*",
+    "next.config.js",
+    "**/*.ts", 
+    "**/*.tsx",  ],
+    
   "exclude": [
-    "./node_modules"
+    "./node_modules",
+
   ]
 }
