@@ -3,6 +3,12 @@ description: 'Docs/Help/Refactor 관련 이슈를 생성하며, Jira와 연동�
 labels: [Docs]
 title: '[Docs/Help/Refactor] 이슈 제목'
 body:
+    - type: markdown
+      attributes:
+          value: |
+              이슈 제목의 Prefix는 [Docs], [Help], [Refactor] 중 하나를 선택하여 작성해주세요.
+              이슈의 Label을 Prefix에 맞게 설정해주세요.
+
     - type: textarea
       id: description
       attributes:
