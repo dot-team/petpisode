@@ -1,6 +1,6 @@
 name: '[Task] Jira 연동 이슈 등록'
 description: 'Feature/Style/Setting/Test 관련 이슈를 생성하며, 생성된 이슈는 Jira의 Task와 연동됩니다.'
-labels: [Feature]
+labels: ''
 title: '[Feature/Style/Setting/Test] 이슈(Task) 제목'
 body:
     - type: markdown

@@ -19,14 +19,14 @@ jobs:
 
                       // Label 조건 정의 (정규표현식 매칭)
                       const labelMappings = [
-                        { regex: /bug/i, label: 'BugFix' },
-                        { regex: /feature/i, label: 'Feature' },
-                        { regex: /style/i, label: 'Style' },
-                        { regex: /docs?/i, label: 'Docs' },
-                        { regex: /setting/i, label: 'Setting' },
-                        { regex: /help/i, label: 'Help' },
-                        { regex: /refactor/i, label: 'Refactor' },
-                        { regex: /test/i, label: 'Test' }
+                        { regex: /\[bug\]/i, label: 'BugFix' },
+                        { regex: /\[feature\]/i, label: 'Feature' },
+                        { regex: /\[style\]/i, label: 'Style' },
+                        { regex: /\[docs?\]/i, label: 'Docs' },
+                        { regex: /\[setting\]/i, label: 'Setting' },
+                        { regex: /\[help\]/i, label: 'Help' },
+                        { regex: /\[refactor\]/i, label: 'Refactor' },
+                        { regex: /\[test\]/i, label: 'Test' }
                       ]
 
                       let labels = []
