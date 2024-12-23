@@ -1,0 +1,48 @@
+name: 'Auto Label'
+on:
+    issues:
+        types: [opened, edited]
+    pull_request:
+        types: [opened, edited]
+
+jobs:
+    add-labels:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/github-script@v6
+              with:
+                  script: |
+                      const owner = context.repo.owner
+                      const repo = context.repo.repo
+                      const issue_number = context.issue.number
+                      const title = context.payload.issue ? context.payload.issue.title : context.payload.pull_request.title
+
+                      // Label 조건 정의 (정규표현식 매칭)
+                      const labelMappings = [
+                        { regex: /bug/i, label: 'BugFix' },
+                        { regex: /feature/i, label: 'Feature' },
+                        { regex: /style/i, label: 'Style' },
+                        { regex: /docs?/i, label: 'Docs' },
+                        { regex: /setting/i, label: 'Setting' },
+                        { regex: /help/i, label: 'Help' },
+                        { regex: /refactor/i, label: 'Refactor' },
+                        { regex: /test/i, label: 'Test' }
+                      ]
+
+                      let labels = []
+
+                      // 제목에 매칭되는 Label 추가
+                      for (const mapping of labelMappings) {
+                        if (mapping.regex.test(title)) {
+                          labels.push(mapping.label)
+                        }
+                      }
+
+                      if (labels.length > 0) {
+                        await github.rest.issues.addLabels({
+                          owner,
+                          repo,
+                          issue_number,
+                          labels
+                        })
+                      }

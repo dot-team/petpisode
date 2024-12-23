@@ -8,7 +8,7 @@ body:
           value: |
               ### 이슈 등록 확인사항
               - 이슈 제목의 Prefix는 [Feature], [Style], [Setting], [Test] 중 하나를 선택하여 작성해주세요.
-              - 이슈의 Label을 Prefix에 맞게 설정해주세요.
+              - 이슈의 Label은 Prefix에 맞게 자동으로 설정됩니다.
               ---
 
     - type: input

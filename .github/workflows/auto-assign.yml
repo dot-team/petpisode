@@ -1,0 +1,40 @@
+name: 'Auto Assign'
+on:
+    issues:
+        types: [opened]
+    pull_request:
+        types: [opened]
+
+jobs:
+    add-assignees:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/github-script@v6
+              with:
+                  script: |
+                      const owner = context.repo.owner
+                      const repo = context.repo.repo
+                      const issue_number = context.issue.number
+
+                      // Assignee를 작성자로 지정
+                      await github.rest.issues.addAssignees({
+                        owner,
+                        repo,
+                        issue_number,
+                        assignees: [context.actor]
+                      })
+
+                      // 모든 repository 멤버를 reviewer로 지정 (PR의 경우에만)
+                      if (context.eventName === 'pull_request') {
+                        const members = await github.rest.repos.listCollaborators({
+                          owner,
+                          repo
+                        })
+                        const reviewers = members.data.map(member => member.login).filter(login => login !== context.actor)
+                        await github.rest.pulls.requestReviewers({
+                          owner,
+                          repo,
+                          pull_number: issue_number,
+                          reviewers
+                        })
+                      }
