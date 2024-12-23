@@ -6,8 +6,10 @@ body:
     - type: markdown
       attributes:
           value: |
-              이슈 제목의 Prefix는 [Docs], [Help], [Refactor] 중 하나를 선택하여 작성해주세요.
-              이슈의 Label을 Prefix에 맞게 설정해주세요.
+              ### 이슈 등록 확인사항
+              - 이슈 제목의 Prefix는 [Docs], [Help], [Refactor] 중 하나를 선택하여 작성해주세요.
+              - 이슈의 Label을 Prefix에 맞게 설정해주세요.
+              ---
 
     - type: textarea
       id: description
