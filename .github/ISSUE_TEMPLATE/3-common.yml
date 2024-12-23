@@ -1,6 +1,6 @@
 name: '[Common] 일반 이슈 등록'
 description: 'Docs/Help/Refactor 관련 이슈를 생성하며, Jira와 연동되지 않는 일반 이슈입니다.'
-labels: ''
+labels: []
 title: '[Docs/Help/Refactor] 이슈 제목'
 body:
     - type: markdown
