@@ -1,10 +1,7 @@
 name: Close Jira Issue
-
 on:
     issues:
-        types: [closed]
-    pull_request:
-        types: [closed]
+        types: closed
 
 jobs:
     close-issue:
