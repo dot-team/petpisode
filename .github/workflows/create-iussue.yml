@@ -1,14 +1,16 @@
-name: 'Create and Link Jira Issue'
+name: 'Create Jira issue check'
 on:
     issues:
         types: [opened]
+    pull_request:
+        types: [opened]
 
 jobs:
-    create-and-link-jira-task:
-        name: Create and Link Jira Task
+    create-issue:
+        name: Create Jira issue
         runs-on: ubuntu-latest
         steps:
-            - name: Login to Jira
+            - name: Login
               uses: atlassian/gajira-login@v3
               env:
                   JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
@@ -17,14 +19,20 @@ jobs:
 
             - name: Checkout main code
               uses: actions/checkout@v4
+              with:
+                  ref: main
 
-            - name: Parse Issue Template
+            - name: Issue Parser
               uses: stefanbuck/github-issue-praser@v3
               id: issue-parser
               with:
                   template-path: .github/ISSUE_TEMPLATE/1-task-sync-jira.yml
 
-            - name: Convert Markdown to Jira Syntax
+            - name: Log Issue Parser
+              run: |
+                  echo '${{ steps.issue-parser.outputs.jsonString }}'
+
+            - name: Convert markdown to Jira Syntax
               uses: peter-evans/jira2md@v1
               id: md2jira
               with:
@@ -35,12 +43,12 @@ jobs:
                       ${{ github.event.issue.body }}
                   mode: md2jira
 
-            - name: Create Jira Task
-              id: create-task
+            - name: Create Issue
+              id: create
               uses: atlassian/gajira-create@v3
               with:
                   project: PET
-                  issuetype: Task
+                  issuetype: task
                   summary: '${{ github.event.issue.title }}'
                   description: '${{ steps.md2jira.outputs.output-text }}'
                   fields: |
@@ -50,27 +58,22 @@ jobs:
                         }
                       }
 
-            - name: Link Task to Story
-              id: link-task
-              uses: atlassian/gajira-link@v3
+            - name: Log created issue
+              run: echo "Jira Issue ${{ steps.issue-parser.outputs.parentKey }}/${{ steps.create.outputs.issue }} was created"
+
+            - name: Checkout main code
+              uses: actions/checkout@v4
               with:
-                  issue: '${{ steps.create-task.outputs.issue }}'
-                  type: 'Relates'
-                  destination-issue: '${{ steps.issue-parser.outputs.issueparser_relateKey }}'
+                  ref: main
 
-            - name: Log Created and Linked Issue
+            - name: Create branch with Ticket number
               run: |
-                  echo "Created Jira Task: ${{ steps.create-task.outputs.issue }}"
-                  echo "Linked Task ${{ steps.create-task.outputs.issue }} to Story ${{ steps.issue-parser.outputs.issueparser_relateKey }}"
+                  git checkout -b ${{ steps.create.outputs.issue }}
+                  git push origin ${{ steps.create.outputs.issue }}
 
-            - name: Create Branch for Task
-              run: |
-                  git checkout -b ${{ steps.create-task.outputs.issue }}
-                  git push origin ${{ steps.create-task.outputs.issue }}
-
-            - name: Update GitHub Issue Title
+            - name: Update issue title
               uses: actions-cool/issues-helper@v3
               with:
                   actions: 'update-issue'
                   token: ${{ secrets.GITHUB_TOKEN }}
-                  title: '${{ steps.create-task.outputs.issue }} ${{ github.event.issue.title }}'
+                  title: '${{ steps.create.outputs.issue }} ${{ github.event.issue.title }}'
