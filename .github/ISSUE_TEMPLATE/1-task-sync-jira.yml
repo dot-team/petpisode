@@ -14,9 +14,18 @@ body:
     - type: input
       id: parentKey
       attributes:
-          label: '상위 작업 Ticket Number'
-          description: '상위 작업의 Ticket Number를 기입해주세요'
+          label: '상위 에픽 Ticket Number'
+          description: '상위 에픽의 Ticket Number를 기입해주세요'
           placeholder: 'PET-1'
+      validations:
+          required: true
+
+    - type: input
+      id: relateKey
+      attributes:
+          label: '연결된 스토리 Ticket Number'
+          description: '연결된 스토리의 Ticket Number를 기입해주세요'
+          placeholder: 'PET-10'
       validations:
           required: true
 
