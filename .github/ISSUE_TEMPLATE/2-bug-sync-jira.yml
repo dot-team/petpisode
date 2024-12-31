@@ -1,7 +1,7 @@
 name: '[Bug] Jira 연동 Bug 등록'
-description: 'Bugfix 관련 이슈를 생성하며, 생성된 이슈는 Jira의 Bug와 연동됩니다.'
-labels: [BugFix]
-title: '[BugFix] 버그(Bug) 제목'
+description: 'fix 관련 이슈를 생성하며, 생성된 이슈는 Jira의 Bug와 연동됩니다.'
+labels: [fix]
+title: '[fix] 버그(Bug) 제목'
 body:
     - type: input
       id: parentKey

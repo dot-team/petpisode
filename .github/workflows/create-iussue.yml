@@ -20,16 +20,16 @@ jobs:
             - name: Determine Issue Type
               id: determine-type
               run: |
-                  if [[ "${{ github.event.issue.title }}" =~ ^\[(Feature|Style|Setting|Test|Bugfix)\] ]]; then
+                  if [[ "${{ github.event.issue.title }}" =~ ^\[(feature|design|setting|test|fix)\] ]]; then
                     prefix=$(echo "${{ github.event.issue.title }}" | grep -o '^\[[^]]*\]' | tr -d '[]')
                     echo "prefix=$prefix" >> $GITHUB_ENV
-                    if [[ "$prefix" == "Bugfix" ]]; then
+                    if [[ "$prefix" == "fix" ]]; then
                       echo "type=Bug" >> $GITHUB_ENV
                     else
                       echo "type=Task" >> $GITHUB_ENV
                     fi
                   else
-                        echo "Error: Issue title must start with [Feature], [Style], [Setting], [Test], or [Bugfix]." >&2
+                        echo "Error: Issue title must start with [feature], [design], [setting], [test], or [fix]." >&2
                         exit 1
                   fi
               shell: bash
@@ -79,10 +79,10 @@ jobs:
             - name: Log created issue
               run: echo "Jira Issue ${{ steps.issue-parser.outputs.parentKey }}/${{ steps.create.outputs.issue }} was created"
 
-            - name: Checkout main code
+            - name: Checkout develop code
               uses: actions/checkout@v4
               with:
-                  ref: main
+                  ref: develop
 
             - name: Create branch with Ticket number
               run: |

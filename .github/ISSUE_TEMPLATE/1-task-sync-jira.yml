@@ -1,13 +1,13 @@
 name: '[Task] Jira 연동 이슈 등록'
-description: 'Feature/Style/Setting/Test 관련 이슈를 생성하며, 생성된 이슈는 Jira의 Task와 연동됩니다.'
+description: 'feature/design/setting/test 관련 이슈를 생성하며, 생성된 이슈는 Jira의 Task와 연동됩니다.'
 labels: []
-title: '[Feature/Style/Setting/Test] 이슈(Task) 제목'
+title: '[feature/design/setting/test] 이슈(Task) 제목'
 body:
     - type: markdown
       attributes:
           value: |
               ### 이슈 등록 확인사항
-              - 이슈 제목의 Prefix는 [Feature], [Style], [Setting], [Test] 중 하나를 선택하여 작성해주세요.
+              - 이슈 제목의 Prefix는 [feature], [design], [setting], [test] 중 하나를 선택하여 작성해주세요.
               - 이슈의 Label은 Prefix에 맞게 자동으로 설정됩니다.
               ---
 
