@@ -21,7 +21,7 @@ jobs:
                       const labelMappings = [
                         { regex: /\[fix\]/i, label: 'fix' },
                         { regex: /\[feature\]/i, label: 'feature' },
-                        { regex: /\[style\]/i, label: 'style' },
+                        { regex: /\[design\]/i, label: 'design' },
                         { regex: /\[docs?\]/i, label: 'docs' },
                         { regex: /\[setting\]/i, label: 'setting' },
                         { regex: /\[file\]/i, label: 'file' },
