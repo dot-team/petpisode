@@ -41,9 +41,10 @@ jobs:
               with:
                   template-path: .github/ISSUE_TEMPLATE/1-task-sync-jira.yml
 
-            - name: Log Issue Parser
+            - name: Log Issue Parser and prefix
               run: |
-                  echo '${{ steps.issue-parser.outputs.jsonString }}'
+                  echo "Parsed branchName: ${{ steps.issue-parser.outputs.issueparser_branchName }}"
+                  echo "Parsed prefix: ${{ env.prefix }}"
 
             - name: Convert markdown to Jira Syntax
               uses: peter-evans/jira2md@v1
@@ -81,8 +82,8 @@ jobs:
 
             - name: Create branch with Ticket number
               run: |
-                  git checkout -b ${{ steps.create.outputs.issue }}
-                  git push origin ${{ steps.create.outputs.issue }}
+                  git checkout -b ${{ env.prefix }}/${{ steps.issue-parser.outputs.issueparser_branchName }}/${{ steps.create.outputs.issue }}
+                  git push origin ${{ env.prefix }}/${{ steps.issue-parser.outputs.issueparser_branchName }}/${{ steps.create.outputs.issue }}
 
             - name: Update issue title
               uses: actions-cool/issues-helper@v3
