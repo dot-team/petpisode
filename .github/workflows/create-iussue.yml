@@ -20,12 +20,12 @@ jobs:
             - name: Determine Issue Type
               id: determine-type
               run: |
-                  if [[ "${{ github.event.issue.title }}" =~ ^\[Feature\] ]]; then
+                  if [[ "${{ github.event.issue.title }}" =~ ^\[(Feature|Style|Setting|Test)\] ]]; then
                       echo "type=Task" >> $GITHUB_ENV
-                  elif [[ "${{ github.event.issue.title }}" =~ ^\[Bug\] ]]; then
+                  elif [[ "${{ github.event.issue.title }}" =~ ^\[Bugfix\] ]]; then
                       echo "type=Bug" >> $GITHUB_ENV
                   else
-                      echo "Error: Issue title must start with [Feature] or [Bug]." >&2
+                      echo "Error: Issue title must start with [Feature], [Style], [Setting], [Test], or [Bugfix]." >&2
                       exit 1
                   fi
               shell: bash
