@@ -15,7 +15,16 @@ jobs:
                       const owner = context.repo.owner
                       const repo = context.repo.repo
                       const issue_number = context.issue.number
-                      const title = context.payload.issue ? context.payload.issue.title : context.payload.pull_request.title
+                      const title = context.payload.issue
+                        ? context.payload.issue.title
+                        : context.payload.pull_request
+                        ? context.payload.pull_request.title
+                        : ''
+
+                      if (!title) {
+                        console.log('Title is undefined. Skipping label addition.')
+                        return
+                      }
 
                       // Label 조건 정의 (정규표현식 매칭)
                       const labelMappings = [
@@ -40,10 +49,17 @@ jobs:
                       }
 
                       if (labels.length > 0) {
-                        await github.rest.issues.addLabels({
-                          owner,
-                          repo,
-                          issue_number,
-                          labels
-                        })
+                        try {
+                          await github.rest.issues.addLabels({
+                            owner,
+                            repo,
+                            issue_number,
+                            labels
+                          })
+                          console.log('Labels added:', labels)
+                        } catch (error) {
+                          console.error('Failed to add labels:', error)
+                        }
+                      } else {
+                        console.log('No matching labels found.')
                       }
