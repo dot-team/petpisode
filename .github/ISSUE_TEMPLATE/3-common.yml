@@ -1,13 +1,13 @@
 name: '[Common] 일반 이슈 등록'
-description: 'Docs/Help/Refactor 관련 이슈를 생성하며, Jira와 연동되지 않는 일반 이슈입니다.'
+description: 'docs/file/refact/style 관련 이슈를 생성하며, Jira와 연동되지 않는 일반 이슈입니다.'
 labels: []
-title: '[Docs/Help/Refactor] 이슈 제목'
+title: '[docs/file/refact/style] 이슈 제목'
 body:
     - type: markdown
       attributes:
           value: |
               ### 이슈 등록 확인사항
-              - 이슈 제목의 Prefix는 [Docs], [Help], [Refactor] 중 하나를 선택하여 작성해주세요.
+              - 이슈 제목의 Prefix는 [docs], [file], [refact], [style] 중 하나를 선택하여 작성해주세요.
               - 이슈의 Label은 Prefix에 맞게 자동으로 설정됩니다.
               ---
 

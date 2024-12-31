@@ -17,6 +17,23 @@ jobs:
                   JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
                   JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
 
+            - name: Determine Issue Type
+              id: determine-type
+              run: |
+                  if [[ "${{ github.event.issue.title }}" =~ ^\[(feature|design|setting|test|fix)\] ]]; then
+                    prefix=$(echo "${{ github.event.issue.title }}" | grep -o '^\[[^]]*\]' | tr -d '[]')
+                    echo "prefix=$prefix" >> $GITHUB_ENV
+                    if [[ "$prefix" == "fix" ]]; then
+                      echo "type=Bug" >> $GITHUB_ENV
+                    else
+                      echo "type=Task" >> $GITHUB_ENV
+                    fi
+                  else
+                        echo "Error: Issue title must start with [feature], [design], [setting], [test], or [fix]." >&2
+                        exit 1
+                  fi
+              shell: bash
+
             - name: Checkout main code
               uses: actions/checkout@v4
               with:
@@ -28,9 +45,10 @@ jobs:
               with:
                   template-path: .github/ISSUE_TEMPLATE/1-task-sync-jira.yml
 
-            - name: Log Issue Parser
+            - name: Log Issue Parser and prefix
               run: |
-                  echo '${{ steps.issue-parser.outputs.jsonString }}'
+                  echo "Parsed branchName: ${{ steps.issue-parser.outputs.issueparser_branchName }}"
+                  echo "Parsed prefix: ${{ env.prefix }}"
 
             - name: Convert markdown to Jira Syntax
               uses: peter-evans/jira2md@v1
@@ -48,7 +66,7 @@ jobs:
               uses: atlassian/gajira-create@v3
               with:
                   project: PET
-                  issuetype: Subtask
+                  issuetype: '${{ env.type }}'
                   summary: '${{ github.event.issue.title }}'
                   description: '${{ steps.md2jira.outputs.output-text }}'
                   fields: |
@@ -61,15 +79,22 @@ jobs:
             - name: Log created issue
               run: echo "Jira Issue ${{ steps.issue-parser.outputs.parentKey }}/${{ steps.create.outputs.issue }} was created"
 
-            - name: Checkout main code
+            - name: Checkout develop code
               uses: actions/checkout@v4
               with:
-                  ref: main
+                  ref: develop
 
             - name: Create branch with Ticket number
               run: |
-                  git checkout -b ${{ steps.create.outputs.issue }}
-                  git push origin ${{ steps.create.outputs.issue }}
+                  prefix="${{ env.prefix }}"
+                  branch_name="${prefix}/${{ steps.issue-parser.outputs.issueparser_branchName }}/${{ steps.create.outputs.issue }}"
+
+                  if ! [[ "$branch_name" =~ ^[a-zA-Z0-9/_-]+$ ]]; then
+                    echo "Error: Invalid branch name $branch_name"
+                    exit 1
+                  fi
+                  git checkout -b "$branch_name"
+                  git push origin "$branch_name"
 
             - name: Update issue title
               uses: actions-cool/issues-helper@v3

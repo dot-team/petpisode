@@ -1,9 +1,9 @@
 name: 'Auto Label'
 on:
     issues:
-        types: [opened, edited]
+        types: [opened]
     pull_request:
-        types: [opened, edited]
+        types: [opened]
 
 jobs:
     add-labels:
@@ -15,18 +15,28 @@ jobs:
                       const owner = context.repo.owner
                       const repo = context.repo.repo
                       const issue_number = context.issue.number
-                      const title = context.payload.issue ? context.payload.issue.title : context.payload.pull_request.title
+                      const title = context.payload.issue
+                        ? context.payload.issue.title
+                        : context.payload.pull_request
+                        ? context.payload.pull_request.title
+                        : ''
+
+                      if (!title) {
+                        console.log('Title is undefined. Skipping label addition.')
+                        return
+                      }
 
                       // Label 조건 정의 (정규표현식 매칭)
                       const labelMappings = [
-                        { regex: /\[bug\]/i, label: 'BugFix' },
-                        { regex: /\[feature\]/i, label: 'Feature' },
-                        { regex: /\[style\]/i, label: 'Style' },
-                        { regex: /\[docs?\]/i, label: 'Docs' },
-                        { regex: /\[setting\]/i, label: 'Setting' },
-                        { regex: /\[help\]/i, label: 'Help' },
-                        { regex: /\[refactor\]/i, label: 'Refactor' },
-                        { regex: /\[test\]/i, label: 'Test' }
+                        { regex: /\[fix\]/i, label: 'fix' },
+                        { regex: /\[feature\]/i, label: 'feature' },
+                        { regex: /\[design\]/i, label: 'design' },
+                        { regex: /\[docs?\]/i, label: 'docs' },
+                        { regex: /\[setting\]/i, label: 'setting' },
+                        { regex: /\[file\]/i, label: 'file' },
+                        { regex: /\[style\]/i, label: 'style' },
+                        { regex: /\[refact\]/i, label: 'refact' },
+                        { regex: /\[test\]/i, label: 'test' }
                       ]
 
                       let labels = []
@@ -39,10 +49,17 @@ jobs:
                       }
 
                       if (labels.length > 0) {
-                        await github.rest.issues.addLabels({
-                          owner,
-                          repo,
-                          issue_number,
-                          labels
-                        })
+                        try {
+                          await github.rest.issues.addLabels({
+                            owner,
+                            repo,
+                            issue_number,
+                            labels
+                          })
+                          console.log('Labels added:', labels)
+                        } catch (error) {
+                          console.error('Failed to add labels:', error)
+                        }
+                      } else {
+                        console.log('No matching labels found.')
                       }
