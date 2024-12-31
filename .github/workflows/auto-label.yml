@@ -26,7 +26,7 @@ jobs:
                         return
                       }
 
-                      // Label 조건 정의 (정규표현식 매칭)
+                      // Label 조건 정의
                       const labelMappings = [
                         { regex: /\[fix\]/i, label: 'fix' },
                         { regex: /\[feature\]/i, label: 'feature' },
@@ -41,7 +41,6 @@ jobs:
 
                       let labels = []
 
-                      // 제목에 매칭되는 Label 추가
                       for (const mapping of labelMappings) {
                         if (mapping.regex.test(title)) {
                           labels.push(mapping.label)
@@ -50,13 +49,16 @@ jobs:
 
                       if (labels.length > 0) {
                         try {
-                          await github.rest.issues.addLabels({
-                            owner,
-                            repo,
-                            issue_number,
-                            labels
-                          })
-                          console.log('Labels added:', labels)
+                          console.log('Attempting to add labels:', labels)
+                          for (const label of labels) {
+                            const response = await github.rest.issues.addLabels({
+                              owner,
+                              repo,
+                              issue_number,
+                              labels: [label]
+                            })
+                            console.log(`Label added: ${label}`, response)
+                          }
                         } catch (error) {
                           console.error('Failed to add labels:', error)
                         }
