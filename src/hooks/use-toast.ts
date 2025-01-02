@@ -55,22 +55,6 @@ interface State {
 
 const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
 
-const addToRemoveQueue = (toastId: string) => {
-    if (toastTimeouts.has(toastId)) {
-        return;
-    }
-
-    const timeout = setTimeout(() => {
-        toastTimeouts.delete(toastId);
-        dispatch({
-            type: 'REMOVE_TOAST',
-            toastId: toastId,
-        });
-    }, TOAST_REMOVE_DELAY);
-
-    toastTimeouts.set(toastId, timeout);
-};
-
 export const reducer = (state: State, action: Action): State => {
     switch (action.type) {
         case 'ADD_TOAST':
@@ -95,8 +79,8 @@ export const reducer = (state: State, action: Action): State => {
             if (toastId) {
                 addToRemoveQueue(toastId);
             } else {
-                state.toasts.forEach(toast => {
-                    addToRemoveQueue(toast.id);
+                state.toasts.forEach(t => {
+                    addToRemoveQueue(t.id);
                 });
             }
 
@@ -123,7 +107,25 @@ export const reducer = (state: State, action: Action): State => {
                 ...state,
                 toasts: state.toasts.filter(t => t.id !== action.toastId),
             };
+        default:
+            return state;
     }
+};
+
+const addToRemoveQueue = (toastId: string) => {
+    if (toastTimeouts.has(toastId)) {
+        return;
+    }
+
+    const timeout = setTimeout(() => {
+        toastTimeouts.delete(toastId);
+        dispatch({
+            type: 'REMOVE_TOAST',
+            toastId,
+        });
+    }, TOAST_REMOVE_DELAY);
+
+    toastTimeouts.set(toastId, timeout);
 };
 
 const listeners: Array<(state: State) => void> = [];
@@ -142,10 +144,10 @@ type Toast = Omit<ToasterToast, 'id'>;
 function toast({ ...props }: Toast) {
     const id = genId();
 
-    const update = (props: ToasterToast) =>
+    const update = (newProps: ToasterToast) =>
         dispatch({
             type: 'UPDATE_TOAST',
-            toast: { ...props, id },
+            toast: { ...newProps, id },
         });
     const dismiss = () => dispatch({ type: 'DISMISS_TOAST', toastId: id });
 
@@ -162,7 +164,7 @@ function toast({ ...props }: Toast) {
     });
 
     return {
-        id: id,
+        id,
         dismiss,
         update,
     };
