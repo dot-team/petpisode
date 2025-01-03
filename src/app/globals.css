@@ -3,19 +3,74 @@
 @tailwind utilities;
 
 :root {
-    --background: #ffffff;
-    --foreground: #171717;
+    /* text */
+    --color-black: #333333;
+    --color-gray-dark: #777777;
+    --color-gray-light: #a0a0a0;
+    --color-white: #ffffff;
+
+    /* primary */
+    --color-primary: #ff9966;
+    --color-primary-light: #ffc2a3;
+    --color-primary-dark: #f37434;
+
+    /* secondary */
+    --color-secondary: #3b427c;
+    --color-secondary-light: #898eb0;
+    --color-secondary-dark: #161e61;
+
+    /* danger */
+    --color-danger: #f06b6e;
+    --color-danger-light: #ffe5e6;
+    --color-danger-dark: #eb393d;
+
+    /* success */
+    --color-success: #6cde83;
+    --color-success-light: #d9f7df;
+    --color-success-dark: #3cc458;
+
+    /* disable */
+    --color-disable: ##d9d9d9;
+    --color-disable-light: #f3f4f6;
+
+    /* area */
+    --color-area: #fcfaf6;
+    --color-area-gray: #d9d9d9;
+
+    /* font-size */
+    --font-xsmall: 12px;
+    --font-small: 14px;
+    --font-medium: 16px;
+    --font-large: 24px;
+    --font-xlarge: 32px;
+
+    /* size */
+    --space-xsmall: 4px;
+    --space-small: 8px;
+    --space-medium: 16px;
+    --space-large: 32px;
+    --space-xlarge: 64px;
+
+    /* box-shadow */
+    --box-shadow-small: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    --box-shadow-medium: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    --box-shadow-large: 0px 4px 8px rgba(0, 0, 0, 0.15);
+
+    /* border radius */
+    --border-radius-small: 6px;
+    --border-radius-medium: 10px;
+    --border-radius-large: 20px;
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --background: #0a0a0a;
-        --foreground: #ededed;
+        --background: var(--color-black);
+        --foreground: var(--color-white);
     }
 }
 
 body {
-    color: var(--foreground);
-    background: var(--background);
-    font-family: Arial, Helvetica, sans-serif;
+    color: var(--color-black);
+    background: var(--color-white);
+    font-family: Pretendard, Arial, Helvetica, sans-serif;
 }
