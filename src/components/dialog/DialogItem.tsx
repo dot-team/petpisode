@@ -7,7 +7,6 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-// import Image from 'next/image';
 
 interface DialogProps {
     buttonTitle: string;
@@ -17,6 +16,8 @@ interface DialogProps {
     cancelMessage: string;
     onSucess: () => void;
     onCancel: () => void;
+    contentClassName?: string;
+    footerClassName?: string;
 }
 
 export function DialogItem({
@@ -27,18 +28,22 @@ export function DialogItem({
     cancelMessage = '취소',
     onSucess,
     onCancel,
+    contentClassName,
+    footerClassName,
 }: DialogProps) {
     return (
         <Dialog>
             <DialogTrigger asChild>
                 <button type="button">{buttonTitle}</button>
             </DialogTrigger>
-            <DialogContent className="sm:mx-w-[450px] bg-red-500 w-[400px] h-[150px]">
+            <DialogContent className={`sm:mx-w-[450px] w-[400px] h-[150px] ${contentClassName}`}>
                 <DialogHeader>
                     <DialogTitle>{title}</DialogTitle>
                     <DialogDescription>{description}</DialogDescription>
                 </DialogHeader>
-                <DialogFooter className="flex items-center  justify-center gap-10">
+                <DialogFooter
+                    className={`flex items-center justify-center gap-10 ${footerClassName}`}
+                >
                     <button onClick={onSucess} type="button">
                         {sucessMesage}
                     </button>
@@ -50,5 +55,10 @@ export function DialogItem({
         </Dialog>
     );
 }
+
+DialogItem.defaultProps = {
+    contentClassName: '',
+    footerClassName: '',
+};
 
 export default DialogItem;
