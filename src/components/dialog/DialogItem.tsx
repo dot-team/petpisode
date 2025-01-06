@@ -33,15 +33,12 @@ export function DialogItem({
             <DialogTrigger asChild>
                 <button type="button">{buttonTitle}</button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:mx-w-[450px] bg-red-500 w-[400px] h-[150px]">
                 <DialogHeader>
-                    <DialogTitle>
-                        <div>{/* <Image /> */}</div>
-                        {title}
-                    </DialogTitle>
+                    <DialogTitle>{title}</DialogTitle>
                     <DialogDescription>{description}</DialogDescription>
                 </DialogHeader>
-                <DialogFooter>
+                <DialogFooter className="flex items-center  justify-center gap-10">
                     <button onClick={onSucess} type="button">
                         {sucessMesage}
                     </button>
