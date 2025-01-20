@@ -1,10 +1,12 @@
-import Link from 'next/link';
+'use client';
+
+import { Button } from '@/components/ui/button';
 
 export default function Page() {
     return (
         <div>
             <h1>Home</h1>
-            <Link href="/about">About</Link>
+            <Button size="sm">테스트 버튼</Button>
         </div>
     );
 }
