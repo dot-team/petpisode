@@ -1,2 +1,2 @@
-export { useSuccessToast } from './use-success-toast';
-export { useErrorToast } from './use-error-toast';
+export { useSuccessToast } from './useSuccessToast';
+export { useErrorToast } from './useErrorToast';

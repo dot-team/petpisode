@@ -1,11 +1,11 @@
 import type { UseCustomToastProps } from '@/types';
-import { toast } from './use-toast';
+import { toast } from './usetoast';
 
-export const useErrorToast = ({ title, description }: UseCustomToastProps) => {
+export const useSuccessToast = ({ title, description }: UseCustomToastProps) => {
     toast({
         title: `${title}`,
         description,
-        variant: 'error',
+        variant: 'success',
         duration: 3000,
     });
 };
