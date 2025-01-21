@@ -2,8 +2,6 @@ name: 'Create Jira issue check'
 on:
     issues:
         types: [opened]
-    pull_request:
-        types: [opened]
 
 jobs:
     create-issue:
