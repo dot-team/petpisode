@@ -12,7 +12,6 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(
                     className,
                 )}
                 ref={ref}
-                // eslint-disable-next-line react/jsx-props-no-spreading
                 {...props}
             />
         );
