@@ -1,60 +1,25 @@
 'use client';
 
-// import { Input } from '@/components/ui/input';
-// import { Label } from '@/components/ui/label';
-// import { DetailViewContainer } from '@/components/AdminViewContainer';
-// import { FormContainer } from '@/components/AdminFormContainer';
-// import {
-//     Select,
-//     SelectContent,
-//     SelectItem,
-//     SelectTrigger,
-//     SelectValue,
-// } from '@/components/ui/select';
-// import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components';
+import FormContainer from '@/components/admin/AdminFormContainer';
 
 export default function page() {
-    // Example detail view
-    // const detailItems = [
-    //     {
-    //         label: 'Date of birth',
-    //         content: '커뮤니티라라라라 커뮤니티라라라라커뮤니티라라라라커뮤니티라라라라',
-    //     },
-    //     {
-    //         label: 'Framework',
-    //         content: '커뮤니티라라라라',
-    //     },
-    //     {
-    //         label: 'Description',
-    //         content:
-    //             '커뮤니티라라라라 커뮤니티라라라라커뮤니티라라라라커뮤니티라라라라 커뮤니티라라라라 커뮤니티라라라라커뮤니티라라라라커뮤니티라라라라',
-    //     },
-    // ];
-
     return (
         <div className="space-y-10 p-6">
-            {/* Detail View Example */}
-            {/* <DetailViewContainer
-                title="커뮤니티 상세"
-                items={detailItems}
-                onCancel={() => console.log('Cancel clicked')}
-                onSubmit={() => console.log('Submit clicked')}
-            /> */}
-
-            {/* Form Example */}
-            {/* <FormContainer
+            {/* Form 예시, 내부 form요소는 공통 컴포넌트 병합 후 수정 예정 */}
+            <FormContainer
                 title="커뮤니티 등록/수정"
                 onCancel={() => console.log('Cancel clicked')}
                 onSubmit={() => console.log('Submit clicked')}
             >
                 <div className="grid gap-1.5">
                     <Label htmlFor="date">Date of birth</Label>
-                    <Input id="date" placeholder="Name of your project" />
+                    {/* <Input id="date" placeholder="Name of your project" /> */}
                 </div>
 
                 <div className="grid gap-1.5">
                     <Label htmlFor="framework">Framework</Label>
-                    <Select>
+                    {/* <Select>
                         <SelectTrigger id="framework">
                             <SelectValue placeholder="Select" />
                         </SelectTrigger>
@@ -63,18 +28,18 @@ export default function page() {
                             <SelectItem value="react">React</SelectItem>
                             <SelectItem value="vue">Vue</SelectItem>
                         </SelectContent>
-                    </Select>
+                    </Select> */}
                 </div>
 
                 <div className="grid gap-1.5">
                     <Label htmlFor="description">Description</Label>
-                    <Textarea
+                    {/* <Textarea
                         id="description"
                         placeholder="Type your message here."
                         className="min-h-[150px]"
-                    />
+                    /> */}
                 </div>
-            </FormContainer> */}
+            </FormContainer>
         </div>
     );
 }
