@@ -1,26 +1,25 @@
 import Link from 'next/link';
-
 import {
     Breadcrumb,
+    BreadcrumbList,
     BreadcrumbItem,
     BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
     BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
+    BreadcrumbPage,
+} from '../ui';
 
-export function BreadcrumbWithCustomSeparator() {
+export default function BreadcrumbWithCustomSeparator() {
     return (
         <Breadcrumb>
             <BreadcrumbList>
                 <BreadcrumbItem>
-                    <BreadcrumbLink>
+                    <BreadcrumbLink asChild>
                         <Link href="/">Home</Link>
                     </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                    <BreadcrumbLink>
+                    <BreadcrumbLink asChild>
                         <Link href="/components">Components</Link>
                     </BreadcrumbLink>
                 </BreadcrumbItem>
