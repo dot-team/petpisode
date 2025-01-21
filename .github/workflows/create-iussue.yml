@@ -2,8 +2,6 @@ name: 'Create Jira issue check'
 on:
     issues:
         types: [opened]
-    pull_request:
-        types: [opened]
 
 jobs:
     create-issue:
@@ -34,10 +32,10 @@ jobs:
                   fi
               shell: bash
 
-            - name: Checkout main code
+            - name: Checkout develop code
               uses: actions/checkout@v4
               with:
-                  ref: main
+                  ref: develop
 
             - name: Issue Parser
               uses: stefanbuck/github-issue-praser@v3
