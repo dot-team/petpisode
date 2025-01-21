@@ -36,7 +36,8 @@
         "prettier/prettier": "error",
         "import/no-absolute-path": "off",
         //@vitejs/react가 devdependencies가 아닌 dependencies에 필요하다고 하는 error 발생으로 인한 설정
-        "import/no-extraneous-dependencies": ["error", { "devDependencies": true }]
+        "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
+        "react/jsx-props-no-spreading": "off" // props로 받은 것 바로 props로 넘기기 허용
     },
     "settings": {
         "react": {
