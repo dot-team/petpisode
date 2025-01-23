@@ -1,5 +1,5 @@
 import { SidebarTrigger } from '@/components/layout/Sidebar/Sidebar';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/common/Avatar/Avatar';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/common';
 
 import BreadcrumbWithCustomSeparator from './BreadcrumbWithCustomSeparator';
 

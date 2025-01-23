@@ -13,8 +13,6 @@ import {
     Collapsible,
     CollapsibleTrigger,
     CollapsibleContent,
-} from '@/components/layout/Collapsible/Collapsible';
-import {
     Sidebar,
     SidebarHeader,
     SidebarContent,
@@ -26,7 +24,7 @@ import {
     SidebarMenuSubItem,
     SidebarMenuSubButton,
     SidebarMenuButton,
-} from '@/components/layout/Sidebar/Sidebar';
+} from '@/components/layout';
 
 // Menu items.
 const items = [

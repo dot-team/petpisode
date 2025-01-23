@@ -1,5 +1,4 @@
-import { Card } from '@/components/common/Card/Card';
-import { Button } from '@/components/common/Button/Button';
+import { Card, Button } from '@/components/common';
 
 interface BaseContainerProps {
     title: string;

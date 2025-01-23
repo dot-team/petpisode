@@ -6,7 +6,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from '@/components/common/Dialog/Dialog';
+} from '@/components/common';
 
 interface DialogProps {
     buttonTitle: string;
