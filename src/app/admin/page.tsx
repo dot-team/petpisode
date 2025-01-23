@@ -1,6 +1,7 @@
 'use client';
 
-import { AdminFormContainer, AdminViewContainer, Label } from '@/components';
+import { Label } from '@/components/common';
+import FormContainer from '@/components/admin/AdminFormContainer';
 
 export default function page() {
     // Example detail view
