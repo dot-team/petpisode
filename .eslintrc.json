@@ -36,7 +36,9 @@
         "import/no-absolute-path": "off",
         "react/jsx-props-no-spreading": "off", // JSX에서 props spreading 허용
         //@vitejs/react가 devdependencies가 아닌 dependencies에 필요하다고 하는 error 발생으로 인한 설정
-        "import/no-extraneous-dependencies": ["error", { "devDependencies": true }]
+        "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
+        "react/jsx-props-no-spreading": "off", // props로 받은 것 바로 props로 넘기기 허용
+        "react/require-default-props": "off" // default props 정의하지 않아도 됨
     },
     "settings": {
         "react": {
