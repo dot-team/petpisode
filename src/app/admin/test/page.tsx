@@ -1,4 +1,5 @@
-import DataTableDemo from '@/components/ui/page';
+import { DynamicDataTable } from '@/components/DynamicDataTable';
+// import DataTableDemo from '@/components/ui/page';
 import React from 'react';
 
 const data = [
@@ -56,8 +57,8 @@ const data = [
 
 export default function Page() {
     return (
-        <div>
-            <DataTableDemo data={data} />
+        <div className="container mx-auto py-10">
+            <DynamicDataTable data={data} />
         </div>
     );
 }
