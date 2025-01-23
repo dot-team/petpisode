@@ -1,14 +1,14 @@
 import Link from 'next/link';
 import { Search } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from '@/components/common/Button/Button';
+import { Input } from '@/components/common/Input/Input';
 import Image from 'next/image';
 import { NAV_ITEM } from '@/constants';
 
 export function UserHeader() {
     return (
-        <header className="sticky top-0 z-50 w-full border-b bg-background flex justify-center">
-            <div className="container flex h-16 items-center">
+        <header className="sticky top-0 z-50 flex justify-center w-full border-b bg-background">
+            <div className="container flex items-center h-16">
                 <div className="flex items-center gap-6 md:gap-8 lg:gap-10">
                     {/* Logo */}
                     <Link href="/">
@@ -33,9 +33,9 @@ export function UserHeader() {
                 </div>
 
                 {/* Search */}
-                <div className="flex flex-1 items-center justify-center px-4">
+                <div className="flex items-center justify-center flex-1 px-4">
                     <div className="relative w-full max-w-[500px]">
-                        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Search className="absolute w-4 h-4 -translate-y-1/2 left-3 top-1/2 text-muted-foreground" />
                         <Input type="search" placeholder="검색해주세요" className="w-full pl-9" />
                     </div>
                 </div>

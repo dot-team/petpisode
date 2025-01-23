@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { SidebarProvider, AdminSidebar, AdminHeader } from '@/components';
+import { SidebarProvider, AdminSidebar, AdminHeader } from '@/components/common';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     return (
