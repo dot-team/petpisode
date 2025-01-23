@@ -10,21 +10,23 @@ import {
     ChevronRight,
 } from 'lucide-react';
 import {
+    Collapsible,
+    CollapsibleTrigger,
+    CollapsibleContent,
+} from '@/components/layout/Collapsible/Collapsible';
+import {
     Sidebar,
     SidebarHeader,
     SidebarContent,
     SidebarGroup,
     SidebarGroupContent,
     SidebarMenu,
-    Collapsible,
     SidebarMenuItem,
-    CollapsibleTrigger,
-    SidebarMenuButton,
-    CollapsibleContent,
     SidebarMenuSub,
     SidebarMenuSubItem,
     SidebarMenuSubButton,
-} from '../ui';
+    SidebarMenuButton,
+} from '@/components/layout/Sidebar/Sidebar';
 
 // Menu items.
 const items = [

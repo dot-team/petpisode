@@ -1,11 +1,13 @@
-import { SidebarTrigger, Avatar, AvatarImage, AvatarFallback } from '../ui';
+import { SidebarTrigger } from '@/components/layout/Sidebar/Sidebar';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/common/Avatar/Avatar';
+
 import BreadcrumbWithCustomSeparator from './BreadcrumbWithCustomSeparator';
 
 export default function AdminHeader() {
     return (
         <header className="border-b bg-sidebar">
-            <div className="flex h-16 items-center px-4 gap-4">
-                <div className="flex items-center gap-2 flex-1">
+            <div className="flex items-center h-16 gap-4 px-4">
+                <div className="flex items-center flex-1 gap-2">
                     <SidebarTrigger />
                     <BreadcrumbWithCustomSeparator />
                 </div>
