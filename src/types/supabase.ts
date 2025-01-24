@@ -1,0 +1,645 @@
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
+
+export type Database = {
+    graphql_public: {
+        Tables: {
+            [_ in never]: never;
+        };
+        Views: {
+            [_ in never]: never;
+        };
+        Functions: {
+            graphql: {
+                Args: {
+                    operationName?: string;
+                    query?: string;
+                    variables?: Json;
+                    extensions?: Json;
+                };
+                Returns: Json;
+            };
+        };
+        Enums: {
+            [_ in never]: never;
+        };
+        CompositeTypes: {
+            [_ in never]: never;
+        };
+    };
+    public: {
+        Tables: {
+            bookmark: {
+                Row: {
+                    bookmark_id: string;
+                    created_at: string;
+                    post_id: string;
+                    user_id: string;
+                };
+                Insert: {
+                    bookmark_id?: string;
+                    created_at?: string;
+                    post_id?: string;
+                    user_id?: string;
+                };
+                Update: {
+                    bookmark_id?: string;
+                    created_at?: string;
+                    post_id?: string;
+                    user_id?: string;
+                };
+                Relationships: [
+                    {
+                        foreignKeyName: 'bookmark_post_id_fkey';
+                        columns: ['post_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'post';
+                        referencedColumns: ['post_id'];
+                    },
+                    {
+                        foreignKeyName: 'bookmark_user_id_fkey';
+                        columns: ['user_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'user';
+                        referencedColumns: ['user_id'];
+                    },
+                ];
+            };
+            category_publish_logs: {
+                Row: {
+                    category_id: string;
+                    created_at: string;
+                    news_id: string;
+                    publish_log_id: string;
+                    published_at: string;
+                };
+                Insert: {
+                    category_id?: string;
+                    created_at?: string;
+                    news_id?: string;
+                    publish_log_id?: string;
+                    published_at?: string;
+                };
+                Update: {
+                    category_id?: string;
+                    created_at?: string;
+                    news_id?: string;
+                    publish_log_id?: string;
+                    published_at?: string;
+                };
+                Relationships: [
+                    {
+                        foreignKeyName: 'category_publish_logs_category_id_fkey';
+                        columns: ['category_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'news_categories';
+                        referencedColumns: ['category_id'];
+                    },
+                    {
+                        foreignKeyName: 'category_publish_logs_news_id_fkey';
+                        columns: ['news_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'news_items';
+                        referencedColumns: ['news_id'];
+                    },
+                ];
+            };
+            category_send_logs: {
+                Row: {
+                    category_id: string;
+                    created_at: string;
+                    news_id: string;
+                    news_items_id: string;
+                    send_log_id: string;
+                    sended_at: string;
+                };
+                Insert: {
+                    category_id?: string;
+                    created_at?: string;
+                    news_id?: string;
+                    news_items_id?: string;
+                    send_log_id?: string;
+                    sended_at?: string;
+                };
+                Update: {
+                    category_id?: string;
+                    created_at?: string;
+                    news_id?: string;
+                    news_items_id?: string;
+                    send_log_id?: string;
+                    sended_at?: string;
+                };
+                Relationships: [
+                    {
+                        foreignKeyName: 'category_send_logs_category_id_fkey';
+                        columns: ['category_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'news_categories';
+                        referencedColumns: ['category_id'];
+                    },
+                    {
+                        foreignKeyName: 'category_send_logs_news_id_fkey';
+                        columns: ['news_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'news_items';
+                        referencedColumns: ['news_id'];
+                    },
+                ];
+            };
+            commnets: {
+                Row: {
+                    comment_id: string;
+                    content: string;
+                    created_at: string;
+                    deleted_at: string | null;
+                    like: number;
+                    paraent_id: string;
+                    post_id: string;
+                    updated_at: string | null;
+                    user_id: string;
+                };
+                Insert: {
+                    comment_id?: string;
+                    content: string;
+                    created_at?: string;
+                    deleted_at?: string | null;
+                    like?: number;
+                    paraent_id?: string;
+                    post_id?: string;
+                    updated_at?: string | null;
+                    user_id?: string;
+                };
+                Update: {
+                    comment_id?: string;
+                    content?: string;
+                    created_at?: string;
+                    deleted_at?: string | null;
+                    like?: number;
+                    paraent_id?: string;
+                    post_id?: string;
+                    updated_at?: string | null;
+                    user_id?: string;
+                };
+                Relationships: [
+                    {
+                        foreignKeyName: 'commnets_post_id_fkey';
+                        columns: ['post_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'post';
+                        referencedColumns: ['post_id'];
+                    },
+                    {
+                        foreignKeyName: 'commnets_user_id_fkey';
+                        columns: ['user_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'user';
+                        referencedColumns: ['user_id'];
+                    },
+                ];
+            };
+            like: {
+                Row: {
+                    comment_id: string;
+                    created_at: string;
+                    like_id: string;
+                    news_id: string;
+                    post_id: string;
+                    target_type: string;
+                    user_id: string;
+                };
+                Insert: {
+                    comment_id?: string;
+                    created_at?: string;
+                    like_id?: string;
+                    news_id?: string;
+                    post_id?: string;
+                    target_type?: string;
+                    user_id?: string;
+                };
+                Update: {
+                    comment_id?: string;
+                    created_at?: string;
+                    like_id?: string;
+                    news_id?: string;
+                    post_id?: string;
+                    target_type?: string;
+                    user_id?: string;
+                };
+                Relationships: [
+                    {
+                        foreignKeyName: 'like_comment_id_fkey';
+                        columns: ['comment_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'commnets';
+                        referencedColumns: ['comment_id'];
+                    },
+                    {
+                        foreignKeyName: 'like_news_id_fkey';
+                        columns: ['news_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'news_items';
+                        referencedColumns: ['news_id'];
+                    },
+                    {
+                        foreignKeyName: 'like_post_id_fkey';
+                        columns: ['post_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'post';
+                        referencedColumns: ['post_id'];
+                    },
+                    {
+                        foreignKeyName: 'like_user_id_fkey';
+                        columns: ['user_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'user';
+                        referencedColumns: ['user_id'];
+                    },
+                ];
+            };
+            news_categories: {
+                Row: {
+                    category: string;
+                    category_id: string;
+                    created_at: string;
+                    description: string | null;
+                    updated_at: string | null;
+                };
+                Insert: {
+                    category?: string;
+                    category_id?: string;
+                    created_at?: string;
+                    description?: string | null;
+                    updated_at?: string | null;
+                };
+                Update: {
+                    category?: string;
+                    category_id?: string;
+                    created_at?: string;
+                    description?: string | null;
+                    updated_at?: string | null;
+                };
+                Relationships: [];
+            };
+            news_items: {
+                Row: {
+                    category_id: string;
+                    contents: string;
+                    created_at: string;
+                    img_url: string;
+                    is_published: boolean;
+                    is_sended: boolean;
+                    like: number;
+                    news_id: string;
+                    share: number;
+                    source: string;
+                    source_published_at: string;
+                    species: string;
+                    summary: string;
+                    title: string;
+                    updated_at: string;
+                    user_id: string;
+                };
+                Insert: {
+                    category_id?: string;
+                    contents?: string;
+                    created_at?: string;
+                    img_url?: string;
+                    is_published?: boolean;
+                    is_sended?: boolean;
+                    like?: number;
+                    news_id?: string;
+                    share?: number;
+                    source?: string;
+                    source_published_at?: string;
+                    species?: string;
+                    summary?: string;
+                    title?: string;
+                    updated_at?: string;
+                    user_id?: string;
+                };
+                Update: {
+                    category_id?: string;
+                    contents?: string;
+                    created_at?: string;
+                    img_url?: string;
+                    is_published?: boolean;
+                    is_sended?: boolean;
+                    like?: number;
+                    news_id?: string;
+                    share?: number;
+                    source?: string;
+                    source_published_at?: string;
+                    species?: string;
+                    summary?: string;
+                    title?: string;
+                    updated_at?: string;
+                    user_id?: string;
+                };
+                Relationships: [
+                    {
+                        foreignKeyName: 'news_items_category_id_fkey';
+                        columns: ['category_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'news_categories';
+                        referencedColumns: ['category_id'];
+                    },
+                    {
+                        foreignKeyName: 'news_items_user_id_fkey';
+                        columns: ['user_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'user';
+                        referencedColumns: ['user_id'];
+                    },
+                ];
+            };
+            news_keyword: {
+                Row: {
+                    category_id: string;
+                    created_at: string;
+                    keyword_id: string;
+                    keyword_name: string;
+                };
+                Insert: {
+                    category_id?: string;
+                    created_at?: string;
+                    keyword_id?: string;
+                    keyword_name: string;
+                };
+                Update: {
+                    category_id?: string;
+                    created_at?: string;
+                    keyword_id?: string;
+                    keyword_name?: string;
+                };
+                Relationships: [
+                    {
+                        foreignKeyName: 'news_keyword_category_id_fkey';
+                        columns: ['category_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'news_categories';
+                        referencedColumns: ['category_id'];
+                    },
+                ];
+            };
+            post: {
+                Row: {
+                    content: string;
+                    created_at: string;
+                    deteled_at: string | null;
+                    img: string;
+                    is_activated: boolean;
+                    like: string;
+                    post_id: string;
+                    report_count: number;
+                    title: string;
+                    updated_at: string;
+                    user_id: string;
+                    view: string;
+                };
+                Insert: {
+                    content: string;
+                    created_at?: string;
+                    deteled_at?: string | null;
+                    img: string;
+                    is_activated?: boolean;
+                    like: string;
+                    post_id?: string;
+                    report_count?: number;
+                    title: string;
+                    updated_at?: string;
+                    user_id?: string;
+                    view: string;
+                };
+                Update: {
+                    content?: string;
+                    created_at?: string;
+                    deteled_at?: string | null;
+                    img?: string;
+                    is_activated?: boolean;
+                    like?: string;
+                    post_id?: string;
+                    report_count?: number;
+                    title?: string;
+                    updated_at?: string;
+                    user_id?: string;
+                    view?: string;
+                };
+                Relationships: [
+                    {
+                        foreignKeyName: 'post_user_id_fkey';
+                        columns: ['user_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'user';
+                        referencedColumns: ['user_id'];
+                    },
+                ];
+            };
+            report: {
+                Row: {
+                    comment: string;
+                    comment_id: string;
+                    created_at: string;
+                    post_id: string;
+                    report_id: string;
+                    target_id: string;
+                    target_type: string;
+                    user_id: string;
+                };
+                Insert: {
+                    comment: string;
+                    comment_id?: string;
+                    created_at?: string;
+                    post_id?: string;
+                    report_id?: string;
+                    target_id?: string;
+                    target_type: string;
+                    user_id?: string;
+                };
+                Update: {
+                    comment?: string;
+                    comment_id?: string;
+                    created_at?: string;
+                    post_id?: string;
+                    report_id?: string;
+                    target_id?: string;
+                    target_type?: string;
+                    user_id?: string;
+                };
+                Relationships: [
+                    {
+                        foreignKeyName: 'report_comment_id_fkey';
+                        columns: ['comment_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'commnets';
+                        referencedColumns: ['comment_id'];
+                    },
+                    {
+                        foreignKeyName: 'report_post_id_fkey';
+                        columns: ['post_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'post';
+                        referencedColumns: ['post_id'];
+                    },
+                    {
+                        foreignKeyName: 'report_user_id_fkey';
+                        columns: ['user_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'user';
+                        referencedColumns: ['user_id'];
+                    },
+                ];
+            };
+            user: {
+                Row: {
+                    create_at: string;
+                    deleted_at: string;
+                    email: string;
+                    email_vaildation: string;
+                    news_subscribe: string;
+                    news_subscribe_type: boolean;
+                    nickname: string;
+                    password: string;
+                    phone: string;
+                    proflie_image_url: string;
+                    provider: string;
+                    provider_id: string | null;
+                    role: string;
+                    user_id: string;
+                };
+                Insert: {
+                    create_at?: string;
+                    deleted_at?: string;
+                    email: string;
+                    email_vaildation: string;
+                    news_subscribe: string;
+                    news_subscribe_type?: boolean;
+                    nickname: string;
+                    password: string;
+                    phone: string;
+                    proflie_image_url: string;
+                    provider: string;
+                    provider_id?: string | null;
+                    role: string;
+                    user_id?: string;
+                };
+                Update: {
+                    create_at?: string;
+                    deleted_at?: string;
+                    email?: string;
+                    email_vaildation?: string;
+                    news_subscribe?: string;
+                    news_subscribe_type?: boolean;
+                    nickname?: string;
+                    password?: string;
+                    phone?: string;
+                    proflie_image_url?: string;
+                    provider?: string;
+                    provider_id?: string | null;
+                    role?: string;
+                    user_id?: string;
+                };
+                Relationships: [];
+            };
+        };
+        Views: {
+            [_ in never]: never;
+        };
+        Functions: {
+            [_ in never]: never;
+        };
+        Enums: {
+            [_ in never]: never;
+        };
+        CompositeTypes: {
+            [_ in never]: never;
+        };
+    };
+};
+
+type PublicSchema = Database[Extract<keyof Database, 'public'>];
+
+export type Tables<
+    PublicTableNameOrOptions extends
+        | keyof (PublicSchema['Tables'] & PublicSchema['Views'])
+        | { schema: keyof Database },
+    TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+        ? keyof (Database[PublicTableNameOrOptions['schema']]['Tables'] &
+              Database[PublicTableNameOrOptions['schema']]['Views'])
+        : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+    ? (Database[PublicTableNameOrOptions['schema']]['Tables'] &
+          Database[PublicTableNameOrOptions['schema']]['Views'])[TableName] extends {
+          Row: infer R;
+      }
+        ? R
+        : never
+    : PublicTableNameOrOptions extends keyof (PublicSchema['Tables'] & PublicSchema['Views'])
+      ? (PublicSchema['Tables'] & PublicSchema['Views'])[PublicTableNameOrOptions] extends {
+            Row: infer R;
+        }
+          ? R
+          : never
+      : never;
+
+export type TablesInsert<
+    PublicTableNameOrOptions extends keyof PublicSchema['Tables'] | { schema: keyof Database },
+    TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+        ? keyof Database[PublicTableNameOrOptions['schema']]['Tables']
+        : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+    ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
+          Insert: infer I;
+      }
+        ? I
+        : never
+    : PublicTableNameOrOptions extends keyof PublicSchema['Tables']
+      ? PublicSchema['Tables'][PublicTableNameOrOptions] extends {
+            Insert: infer I;
+        }
+          ? I
+          : never
+      : never;
+
+export type TablesUpdate<
+    PublicTableNameOrOptions extends keyof PublicSchema['Tables'] | { schema: keyof Database },
+    TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+        ? keyof Database[PublicTableNameOrOptions['schema']]['Tables']
+        : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+    ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
+          Update: infer U;
+      }
+        ? U
+        : never
+    : PublicTableNameOrOptions extends keyof PublicSchema['Tables']
+      ? PublicSchema['Tables'][PublicTableNameOrOptions] extends {
+            Update: infer U;
+        }
+          ? U
+          : never
+      : never;
+
+export type Enums<
+    PublicEnumNameOrOptions extends keyof PublicSchema['Enums'] | { schema: keyof Database },
+    EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
+        ? keyof Database[PublicEnumNameOrOptions['schema']]['Enums']
+        : never = never,
+> = PublicEnumNameOrOptions extends { schema: keyof Database }
+    ? Database[PublicEnumNameOrOptions['schema']]['Enums'][EnumName]
+    : PublicEnumNameOrOptions extends keyof PublicSchema['Enums']
+      ? PublicSchema['Enums'][PublicEnumNameOrOptions]
+      : never;
+
+export type CompositeTypes<
+    PublicCompositeTypeNameOrOptions extends
+        | keyof PublicSchema['CompositeTypes']
+        | { schema: keyof Database },
+    CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+        schema: keyof Database;
+    }
+        ? keyof Database[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
+        : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+    ? Database[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
+    : PublicCompositeTypeNameOrOptions extends keyof PublicSchema['CompositeTypes']
+      ? PublicSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
+      : never;
