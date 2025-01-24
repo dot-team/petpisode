@@ -9,22 +9,22 @@ import {
     ChevronDown,
     ChevronRight,
 } from 'lucide-react';
-
 import {
+    Collapsible,
+    CollapsibleTrigger,
+    CollapsibleContent,
     Sidebar,
+    SidebarHeader,
     SidebarContent,
     SidebarGroup,
     SidebarGroupContent,
-    SidebarHeader,
     SidebarMenu,
-    SidebarMenuButton,
     SidebarMenuItem,
     SidebarMenuSub,
-    SidebarMenuSubButton,
     SidebarMenuSubItem,
-} from '@/components/ui/sidebar';
-
-import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
+    SidebarMenuSubButton,
+    SidebarMenuButton,
+} from '@/components/layout';
 
 // Menu items.
 const items = [
@@ -70,7 +70,7 @@ const items = [
     },
 ];
 
-export function AdminSidebar() {
+export default function AdminSidebar() {
     return (
         <Sidebar>
             <SidebarHeader>Petpisode</SidebarHeader>

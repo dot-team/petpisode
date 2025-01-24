@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import * as React from 'react';
 import * as AvatarPrimitive from '@radix-ui/react-avatar';
 
