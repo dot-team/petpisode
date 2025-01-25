@@ -67,6 +67,9 @@ export default {
                 l: 'var(--space-large)',
                 xl: 'var(--space-xlarge)',
             },
+            content: {
+                space: '"내용을 입력해주세요."',
+            },
         },
     },
     plugins: [require('tailwindcss-animate')],
