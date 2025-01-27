@@ -28,7 +28,7 @@ export type Database = {
     };
     public: {
         Tables: {
-            bookmark: {
+            bookmarks: {
                 Row: {
                     bookmark_id: string;
                     created_at: string;
@@ -52,14 +52,14 @@ export type Database = {
                         foreignKeyName: 'bookmark_post_id_fkey';
                         columns: ['post_id'];
                         isOneToOne: false;
-                        referencedRelation: 'post';
+                        referencedRelation: 'posts';
                         referencedColumns: ['post_id'];
                     },
                     {
                         foreignKeyName: 'bookmark_user_id_fkey';
                         columns: ['user_id'];
                         isOneToOne: false;
-                        referencedRelation: 'user';
+                        referencedRelation: 'users';
                         referencedColumns: ['user_id'];
                     },
                 ];
@@ -145,7 +145,7 @@ export type Database = {
                     },
                 ];
             };
-            commnets: {
+            comments: {
                 Row: {
                     comment_id: string;
                     content: string;
@@ -184,19 +184,19 @@ export type Database = {
                         foreignKeyName: 'commnets_post_id_fkey';
                         columns: ['post_id'];
                         isOneToOne: false;
-                        referencedRelation: 'post';
+                        referencedRelation: 'posts';
                         referencedColumns: ['post_id'];
                     },
                     {
                         foreignKeyName: 'commnets_user_id_fkey';
                         columns: ['user_id'];
                         isOneToOne: false;
-                        referencedRelation: 'user';
+                        referencedRelation: 'users';
                         referencedColumns: ['user_id'];
                     },
                 ];
             };
-            like: {
+            likes: {
                 Row: {
                     comment_id: string;
                     created_at: string;
@@ -229,7 +229,7 @@ export type Database = {
                         foreignKeyName: 'like_comment_id_fkey';
                         columns: ['comment_id'];
                         isOneToOne: false;
-                        referencedRelation: 'commnets';
+                        referencedRelation: 'comments';
                         referencedColumns: ['comment_id'];
                     },
                     {
@@ -243,14 +243,14 @@ export type Database = {
                         foreignKeyName: 'like_post_id_fkey';
                         columns: ['post_id'];
                         isOneToOne: false;
-                        referencedRelation: 'post';
+                        referencedRelation: 'posts';
                         referencedColumns: ['post_id'];
                     },
                     {
                         foreignKeyName: 'like_user_id_fkey';
                         columns: ['user_id'];
                         isOneToOne: false;
-                        referencedRelation: 'user';
+                        referencedRelation: 'users';
                         referencedColumns: ['user_id'];
                     },
                 ];
@@ -346,12 +346,12 @@ export type Database = {
                         foreignKeyName: 'news_items_user_id_fkey';
                         columns: ['user_id'];
                         isOneToOne: false;
-                        referencedRelation: 'user';
+                        referencedRelation: 'users';
                         referencedColumns: ['user_id'];
                     },
                 ];
             };
-            news_keyword: {
+            news_keywords: {
                 Row: {
                     category_id: string;
                     created_at: string;
@@ -380,7 +380,7 @@ export type Database = {
                     },
                 ];
             };
-            post: {
+            posts: {
                 Row: {
                     content: string;
                     created_at: string;
@@ -428,12 +428,12 @@ export type Database = {
                         foreignKeyName: 'post_user_id_fkey';
                         columns: ['user_id'];
                         isOneToOne: false;
-                        referencedRelation: 'user';
+                        referencedRelation: 'users';
                         referencedColumns: ['user_id'];
                     },
                 ];
             };
-            report: {
+            reports: {
                 Row: {
                     comment: string;
                     comment_id: string;
@@ -469,26 +469,26 @@ export type Database = {
                         foreignKeyName: 'report_comment_id_fkey';
                         columns: ['comment_id'];
                         isOneToOne: false;
-                        referencedRelation: 'commnets';
+                        referencedRelation: 'comments';
                         referencedColumns: ['comment_id'];
                     },
                     {
                         foreignKeyName: 'report_post_id_fkey';
                         columns: ['post_id'];
                         isOneToOne: false;
-                        referencedRelation: 'post';
+                        referencedRelation: 'posts';
                         referencedColumns: ['post_id'];
                     },
                     {
                         foreignKeyName: 'report_user_id_fkey';
                         columns: ['user_id'];
                         isOneToOne: false;
-                        referencedRelation: 'user';
+                        referencedRelation: 'users';
                         referencedColumns: ['user_id'];
                     },
                 ];
             };
-            user: {
+            users: {
                 Row: {
                     create_at: string;
                     deleted_at: string;
