@@ -1,4 +1,5 @@
 import Link from 'next/link';
+
 import {
     Breadcrumb,
     BreadcrumbList,
@@ -6,7 +7,7 @@ import {
     BreadcrumbLink,
     BreadcrumbSeparator,
     BreadcrumbPage,
-} from '../ui';
+} from '@/components/layout';
 
 export default function BreadcrumbWithCustomSeparator() {
     return (

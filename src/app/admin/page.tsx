@@ -1,13 +1,37 @@
 'use client';
 
-import { Label } from '@/components';
+import { Label } from '@/components/common';
 import FormContainer from '@/components/admin/AdminFormContainer';
 
 export default function page() {
+    // Example detail view
+    const detailItems = [
+        {
+            label: 'Date of birth',
+            content: '커뮤니티라라라라 커뮤니티라라라라커뮤니티라라라라커뮤니티라라라라',
+        },
+        {
+            label: 'Framework',
+            content: '커뮤니티라라라라',
+        },
+        {
+            label: 'Description',
+            content:
+                '커뮤니티라라라라 커뮤니티라라라라커뮤니티라라라라커뮤니티라라라라 커뮤니티라라라라 커뮤니티라라라라커뮤니티라라라라커뮤니티라라라라',
+        },
+    ];
+
     return (
         <div className="space-y-10 p-6">
+            <AdminViewContainer
+                title="커뮤니티 상세"
+                items={detailItems}
+                onCancel={() => console.log('Cancel clicked')}
+                onSubmit={() => console.log('Submit clicked')}
+            />
+
             {/* Form 예시, 내부 form요소는 공통 컴포넌트 병합 후 수정 예정 */}
-            <FormContainer
+            <AdminFormContainer
                 title="커뮤니티 등록/수정"
                 onCancel={() => console.log('Cancel clicked')}
                 onSubmit={() => console.log('Submit clicked')}
@@ -39,7 +63,7 @@ export default function page() {
                         className="min-h-[150px]"
                     /> */}
                 </div>
-            </FormContainer>
+            </AdminFormContainer>
         </div>
     );
 }
