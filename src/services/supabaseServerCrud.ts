@@ -1,50 +1,54 @@
-import { supabase } from '@/lib';
-import { TableName, TableInsert, TableUpdate } from '@/types/supabaseCrudTypes';
+import { SUPABASE_ENDPOINT } from '@/constants/endpoints';
+import { supabaseRest } from '@/lib';
+import { TableColumn, TableData, TableName, TablesInsert, TablesUpdate } from '@/types';
 
-export const fetchAllDataFromServer = async (table: TableName) => {
-    const { data, error } = await supabase.from(table).select('*');
-
-    if (error) throw error;
-
-    return data;
+export const fetchAllDataFromServer = async <T extends TableName>(
+    table: T,
+): Promise<TableData<T>[]> => {
+    const response = await supabaseRest.get<TableData<T>[]>(table);
+    return response.data;
 };
 
-export const fetchDataByIdFromServer = async (table: TableName, column: string, id: string) => {
-    const { data, error } = await supabase.from(table).select('*').eq(column, id).single();
-
-    if (error) throw error;
-
-    return data;
+export const fetchDataByIdFromServer = async <T extends TableName>(
+    table: T,
+    column: TableColumn<T>,
+    id: string,
+): Promise<TableData<T>[]> => {
+    const response = await supabaseRest.get<TableData<T>[]>(
+        SUPABASE_ENDPOINT.BY_ID(table, column, id),
+    );
+    return response.data;
 };
 
 export const createDataFromServer = async <T extends TableName>(
     table: T,
-    payload: TableInsert<T>,
-) => {
-    const { data, error } = await supabase.from(table).insert([payload]).select();
-
-    if (error) throw error;
-
-    return data;
+    payload: TablesInsert<T>,
+): Promise<TablesInsert<T>[]> => {
+    const response = await supabaseRest.post<TablesInsert<T>[]>(table, payload, {
+        headers: {
+            Prefer: 'return=representation',
+        },
+    });
+    return response.data;
 };
 
 export const updateDataByIdFromServer = async <T extends TableName>(
     table: T,
-    column: string,
+    column: TableColumn<T>,
     id: string,
-    payload: TableUpdate<T>,
-) => {
-    const { data, error } = await supabase.from(table).update(payload).eq(column, id).select();
-
-    if (error) throw error;
-
-    return data;
+    payload: TablesUpdate<T>,
+): Promise<TablesUpdate<T>> => {
+    const response = await supabaseRest.patch<TablesUpdate<T>>(
+        SUPABASE_ENDPOINT.BY_ID(table, column, id),
+        payload,
+    );
+    return response.data;
 };
 
-export const deleteDataByIdFromServer = async (table: TableName, column: string, id: string) => {
-    const { data, error } = await supabase.from(table).delete().eq(column, id).select();
-
-    if (error) throw error;
-
-    return data;
+export const deleteDataByIdFromServer = async <T extends TableName>(
+    table: T,
+    column: TableColumn<T>,
+    id: string,
+): Promise<void> => {
+    await supabaseRest.delete(SUPABASE_ENDPOINT.BY_ID(table, column, id));
 };
