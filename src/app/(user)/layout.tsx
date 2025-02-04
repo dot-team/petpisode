@@ -7,7 +7,7 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
     return (
         <div className="relative flex flex-col min-h-screen">
             <UserHeader />
-            <main className="flex-1">{children}</main>
+            <main className="container flex-1 py-4 md:py-7">{children}</main>
         </div>
     );
 }
