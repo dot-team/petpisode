@@ -5,22 +5,27 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-    'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-950 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 dark:focus-visible:ring-zinc-300',
+    'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-950 disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 dark:focus-visible:ring-zinc-300',
     {
         variants: {
             variant: {
                 primary:
-                    'bg-[#F4C757] text-zinc-50 shadow hover:bg-zinc-900/90 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/90 rounded-md',
-                error: 'bg-red-500 text-zinc-50 shadow-sm hover:bg-red-500/90 dark:bg-red-900 dark:text-zinc-50 dark:hover:bg-red-900/90 ',
-                outline:
-                    'border border-zinc-200 bg-white shadow-sm hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50',
+                    'bg-primary text-dot-white hover:bg-primary-dark dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/90 rounded-md disabled:bg-area-gray disabled:text-dot-gray-dark',
+                error: 'bg-danger text-dot-white hover:bg-danger-dark dark:bg-red-900 dark:text-zinc-50 dark:hover:bg-red-900/90 disabled:bg-area-gray disabled:text-dot-gray-dark',
+                primaryOutline:
+                    'border border-primary bg-white text-primary hover:bg-primary hover:text-dot-white dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 disabled:border-area-gray disabled:text-dot-gray-dark',
                 secondary:
-                    'bg-zinc-100 text-zinc-900 shadow-sm hover:bg-zinc-100/80 dark:bg-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-800/80 ',
+                    'bg-secondary text-dot-white hover:bg-secondary-dark dark:bg-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-800/80 disabled:bg-area-gray disabled:text-dot-gray-dark',
+                secondaryOutline:
+                    'border border-secondary bg-white text-secondary hover:bg-secondary hover:text-dot-white dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 disabled:border-area-gray disabled:text-dot-gray-dark',
+                admin: 'bg-zinc-700 text-dot-white hover:bg-zinc-900 dark:bg-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-800/80 disabled:bg-area-gray disabled:text-dot-gray-dark',
+                adminOutline:
+                    'border border-zinc-700 bg-white text-dot-black hover:bg-zinc-700 hover:text-dot-white dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 disabled:border-area-gray disabled:text-dot-gray-dark',
             },
             size: {
                 default: 'h-9 px-4 py-2',
-                sm: 'h-8 rounded-md px-3 text-xs',
-                lg: 'h-10 rounded-md px-8',
+                sm: 'h-8 rounded-dot-s px-3 text-xs',
+                lg: 'h-10 rounded-dot-l px-8',
                 icon: 'h-9 w-9',
             },
         },
