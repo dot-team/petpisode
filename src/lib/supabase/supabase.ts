@@ -12,7 +12,7 @@ export const supabaseRest = axios.create({
     baseURL: `${SUPABASE_URL}${SUPABASE_BASE_PATH}`,
     headers: {
         apikey: SUPABASE_SERVICE_ROLE,
-        Authorization: `supabase ${SUPABASE_SERVICE_ROLE}`,
+        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE}`,
         'Content-Type': 'application/json',
     },
 });

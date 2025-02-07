@@ -10,7 +10,7 @@ export async function GET(
     request: Request,
     { params }: { params: { table: TableName; id: string } },
 ) {
-    const { table, id } = params;
+    const { table, id } = await params;
     const { searchParams } = new URL(request.url);
     const column = searchParams.get('column') as TableColumn<typeof table>;
 
@@ -27,7 +27,7 @@ export async function PATCH(
     request: Request,
     { params }: { params: { table: TableName; id: string } },
 ) {
-    const { table, id } = params;
+    const { table, id } = await params;
     const { searchParams } = new URL(request.url);
     const column = searchParams.get('column') as TableColumn<typeof table>;
     const payload = await request.json();
@@ -45,7 +45,7 @@ export async function DELETE(
     request: Request,
     { params }: { params: { table: TableName; id: string } },
 ) {
-    const { table, id } = params;
+    const { table, id } = await params;
     const { searchParams } = new URL(request.url);
     const column = searchParams.get('column') as TableColumn<typeof table>;
 

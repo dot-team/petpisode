@@ -3,7 +3,7 @@ import { createDataFromServer, fetchAllDataFromServer } from '@/services/supabas
 import { TableName } from '@/types/supabaseCrudTypes';
 
 export async function GET(_request: Request, { params }: { params: { table: TableName } }) {
-    const { table } = params;
+    const { table } = await params;
 
     try {
         const data = await fetchAllDataFromServer(table);
@@ -15,7 +15,7 @@ export async function GET(_request: Request, { params }: { params: { table: Tabl
 }
 
 export async function POST(request: Request, { params }: { params: { table: TableName } }) {
-    const { table } = params;
+    const { table } = await params;
     const payload = await request.json();
 
     try {
