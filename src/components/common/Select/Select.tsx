@@ -3,6 +3,7 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 import { Check, ChevronDown, ChevronUp } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
+import { cva, VariantProps } from 'node_modules/class-variance-authority/dist';
 
 const Select = SelectPrimitive.Root;
 
@@ -10,16 +11,34 @@ const SelectGroup = SelectPrimitive.Group;
 
 const SelectValue = SelectPrimitive.Value;
 
+const selectVariants = cva(
+    'flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border bg-transparent px-3 py-2 text-sm placeholder:text-dot-gray-dark focus:outline-none focus:ring-1 disabled:cursor-not-allowed disabled:bg-area-gray disabled:border-none disabled:text-dot-gray-dark [&>span]:line-clamp-1 dark:border-zinc-800 dark:ring-offset-zinc-950 dark:placeholder:text-zinc-400 dark:focus:ring-zinc-300',
+    {
+        variants: {
+            variant: {
+                primary:
+                    'border-primary focus-visible:ring-primary dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50',
+                secondary:
+                    'border-secondary focus-visible:ring-secondary dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50',
+                admin: 'border-zinc-700 focus-visible:ring-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50',
+            },
+        },
+        defaultVariants: {
+            variant: 'primary',
+        },
+    },
+);
+
+type SelectTriggerProps = React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> &
+    VariantProps<typeof selectVariants>;
+
 const SelectTrigger = React.forwardRef<
     React.ElementRef<typeof SelectPrimitive.Trigger>,
-    React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
+    SelectTriggerProps
+>(({ className, variant, children, ...props }, ref) => (
     <SelectPrimitive.Trigger
         ref={ref}
-        className={cn(
-            'flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-zinc-200 bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-white placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-950 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 dark:border-zinc-800 dark:ring-offset-zinc-950 dark:placeholder:text-zinc-400 dark:focus:ring-zinc-300',
-            className,
-        )}
+        className={cn(selectVariants({ variant }), className)}
         {...props}
     >
         {children}

@@ -2,7 +2,7 @@
     "env": {
         "browser": true,
         "es2021": true,
-        "node":true
+        "node": true
     },
     "extends": [
         "airbnb",
@@ -17,7 +17,6 @@
         "next/core-web-vitals", // ✅ Next.js 권장 ESLint 설정 추가
         "plugin:prettier/recommended",
         "prettier"
-
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -35,6 +34,7 @@
         "import/prefer-default-export": "off",
         "prettier/prettier": "error",
         "import/no-absolute-path": "off",
+        "react/jsx-props-no-spreading": "off", // JSX에서 props spreading 허용
         //@vitejs/react가 devdependencies가 아닌 dependencies에 필요하다고 하는 error 발생으로 인한 설정
         "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
         "react/jsx-props-no-spreading": "off", // props로 받은 것 바로 props로 넘기기 허용
@@ -45,5 +45,5 @@
             "version": "detect"
         }
     },
-    "ignorePatterns": ["build", "dist", "public","tailwind.config.js","vitest.config.ts"]
+    "ignorePatterns": ["build", "dist", "public", "tailwind.config.js", "vitest.config.ts"]
 }
