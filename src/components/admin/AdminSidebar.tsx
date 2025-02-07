@@ -40,11 +40,11 @@ const items = [
     },
     {
         title: '뉴스레터',
-        url: '#',
+        url: '/admin/newsletter',
         icon: Newspaper,
         subItems: [
             { title: '목록', url: '#' },
-            { title: '수집', url: '#' },
+            { title: '수집', url: '/admin/newsletter/collect' },
             { title: '게시 및 발송', url: '#' },
         ],
     },
