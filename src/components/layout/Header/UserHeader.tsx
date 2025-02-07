@@ -1,18 +1,26 @@
 import Link from 'next/link';
-import { Search } from 'lucide-react';
-import { Button } from '@/components/common/Button/Button';
-import { Input } from '@/components/common/Input/Input';
 import Image from 'next/image';
+import { Search } from 'lucide-react';
+import { Button, Input } from '@/components';
 import { NAV_ITEM } from '@/constants';
+import Logo from '/public/images/logo.svg';
 
 export function UserHeader() {
     return (
-        <header className="sticky top-0 z-50 flex justify-center w-full border-b bg-background">
-            <div className="container flex items-center h-16">
+        <header className="sticky top-0 z-50 flex justify-center w-full border-b bg-dot-white">
+            <div className="container flex justify-between items-center h-16">
                 <div className="flex items-center gap-6 md:gap-8 lg:gap-10">
                     {/* Logo */}
                     <Link href="/">
-                        <Image src="/images/logo.svg" width={112} height={40} alt="Petpisode" />
+                        <Image
+                            src={Logo}
+                            alt="Petpisode"
+                            sizes="(max-width: 768px) 82px, 112px"
+                            width={112}
+                            height={40}
+                            className="w-[82px] md:w-[112px] h-auto"
+                            priority
+                        />
                     </Link>
 
                     {/* Main Navigation */}
@@ -32,22 +40,21 @@ export function UserHeader() {
                     </nav>
                 </div>
 
-                {/* Search */}
-                <div className="flex items-center justify-center flex-1 px-4">
-                    <div className="relative w-full max-w-[500px]">
-                        <Search className="absolute w-4 h-4 -translate-y-1/2 left-3 top-1/2 text-muted-foreground" />
+                <div className="flex items-center justify-end flex-1">
+                    {/* Search */}
+                    <div className="hidden md:block relative w-full max-w-[300px] px-2">
+                        <Search className="absolute w-4 h-4 -translate-y-1/2 left-4 top-1/2 text-muted-foreground" />
                         <Input type="search" placeholder="검색해주세요" className="w-full pl-9" />
                     </div>
-                </div>
-
-                {/* Actions */}
-                <div className="flex items-center gap-2">
-                    <Button variant="primary" size="sm">
-                        구독하기
-                    </Button>
-                    <Button variant="outline" size="sm">
-                        로그인
-                    </Button>
+                    {/* Actions */}
+                    <div className="flex items-center gap-2">
+                        <Button variant="primary" size="sm">
+                            구독하기
+                        </Button>
+                        <Button asChild variant="outline" size="sm">
+                            <Link href="/login">로그인</Link>
+                        </Button>
+                    </div>
                 </div>
             </div>
         </header>
