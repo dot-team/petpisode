@@ -11,6 +11,22 @@ import {
 import { MoveRight } from 'lucide-react';
 import React from 'react';
 
+const categoryOptions = [
+    { value: 'health', label: '건강' },
+    { value: 'training', label: '훈련' },
+    { value: 'care', label: '관리' },
+    { value: 'issue', label: '이슈' },
+    { value: 'story', label: '이야기' },
+    { value: 'activity', label: '활동' },
+    { value: 'adoption', label: '입양' },
+    { value: 'fun', label: '재미' },
+];
+
+const speciesOptions = [
+    { value: 'dog', label: '강아지' },
+    { value: 'cat', label: '고양이' },
+];
+
 function NewsletterCollect() {
     const onClickAPIRequestBtn = () => {
         console.log('onClickAPIRequestBtn');
@@ -82,14 +98,11 @@ function NewsletterCollect() {
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="health">건강</SelectItem>
-                                    <SelectItem value="training">훈련</SelectItem>
-                                    <SelectItem value="care">관리</SelectItem>
-                                    <SelectItem value="issue">이슈</SelectItem>
-                                    <SelectItem value="story">이야기</SelectItem>
-                                    <SelectItem value="activity">활동</SelectItem>
-                                    <SelectItem value="adoption">입양</SelectItem>
-                                    <SelectItem value="fun">재미</SelectItem>
+                                    {categoryOptions.map(category => (
+                                        <SelectItem key={category.value} value={category.value}>
+                                            {category.label}
+                                        </SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
                         </div>
@@ -106,8 +119,11 @@ function NewsletterCollect() {
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="dog">강아지</SelectItem>
-                                    <SelectItem value="cat">고양이</SelectItem>
+                                    {speciesOptions.map(species => (
+                                        <SelectItem key={species.value} value={species.value}>
+                                            {species.label}
+                                        </SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
                         </div>
