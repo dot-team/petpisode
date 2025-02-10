@@ -51,7 +51,7 @@ export function UserHeader() {
                         <Button variant="primary" size="sm">
                             구독하기
                         </Button>
-                        <Button asChild variant="outline" size="sm">
+                        <Button asChild variant="primaryOutline" size="sm">
                             <Link href="/login">로그인</Link>
                         </Button>
                     </div>
