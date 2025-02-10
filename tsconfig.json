@@ -24,7 +24,6 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "node_modules/*": ["./node_modules/*"]
     },
     "plugins": [
       {
@@ -50,6 +49,5 @@
     
   "exclude": [
     "./node_modules",
-
   ]
 }
