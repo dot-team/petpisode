@@ -3,6 +3,13 @@ export default {
     darkMode: ['class'],
     content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
     theme: {
+        container: {
+            center: true,
+            screens: {
+                DEFAULT: '1200px',
+            },
+            padding: '1rem',
+        },
         extend: {
             fontSize: {
                 xs: 'var(--font-xsmall)',
@@ -66,6 +73,9 @@ export default {
                 m: 'var(--space-small)',
                 l: 'var(--space-large)',
                 xl: 'var(--space-xlarge)',
+            },
+            content: {
+                space: '"내용을 입력해주세요."',
             },
         },
     },

@@ -1,6 +1,6 @@
 import { TableColumn, TableName } from '@/types';
 
-export const SUPABASE_BASE_PATH = '/rest/v1';
+export const SUPABASE_BASE_PATH = '/rest/v1/';
 
 export const SUPABASE_ENDPOINT = {
     BOOKMARKS: 'bookmarks',
@@ -20,3 +20,5 @@ export const SUPABASE_ENDPOINT = {
     BY_TABLE_ID_COLUMN: <T extends TableName>(table: T, column: TableColumn<T>, id: string) =>
         `/api/${table}/${id}?column=${String(column)}`,
 };
+
+export const GEMINI_ENDPOINT = '/api/reconstruct-contents';
