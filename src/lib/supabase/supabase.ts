@@ -17,14 +17,10 @@ export const supabaseRest = axios.create({
     },
 });
 
-export const supabase = createClient<Database>(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE!,
-    {
-        auth: {
-            persistSession: true,
-            autoRefreshToken: true,
-            detectSessionInUrl: true,
-        },
+export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_SERVICE_ROLE, {
+    auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
     },
-);
+});
