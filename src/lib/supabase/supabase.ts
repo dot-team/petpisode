@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '@/types';
-import axios from 'node_modules/axios';
+import axios from 'axios';
 import { SUPABASE_BASE_PATH } from '@/constants/endpoints';
 
 const { SUPABASE_URL, SUPABASE_SERVICE_ROLE } = process.env;
