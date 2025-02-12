@@ -1,11 +1,16 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState } from 'react';
 import { Search } from 'lucide-react';
 import { Button, Input } from '@/components';
+import { LoginDialog } from '@/components/auth';
 import { NAV_ITEM } from '@/constants';
 import Logo from '/public/images/logo.svg';
 
 export function UserHeader() {
+    const [isLoginOpen, setIsLoginOpen] = useState(false);
     return (
         <header className="sticky top-0 z-50 flex justify-center w-full border-b bg-dot-white">
             <div className="container flex justify-between items-center h-16">
@@ -51,9 +56,14 @@ export function UserHeader() {
                         <Button variant="primary" size="sm">
                             구독하기
                         </Button>
-                        <Button asChild variant="outline" size="sm">
-                            <Link href="/login">로그인</Link>
+                        <Button
+                            variant="primaryOutline"
+                            size="sm"
+                            onClick={() => setIsLoginOpen(true)}
+                        >
+                            로그인
                         </Button>
+                        <LoginDialog isOpen={isLoginOpen} onOpenChange={setIsLoginOpen} />
                     </div>
                 </div>
             </div>
