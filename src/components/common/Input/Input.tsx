@@ -1,7 +1,7 @@
 import * as React from 'react';
 
+import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { cva, VariantProps } from 'node_modules/class-variance-authority/dist';
 
 const inputVariants = cva(
     'flex h-9 w-full border bg-white text-dot-black rounded-dot-s px-3 py-1 text-base transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-zinc-950 placeholder:text-dot-gray-light focus-visible:outline-none focus-visible:ring-1 disabled:cursor-not-allowed disabled:bg-area-gray disabled:text-dot-gray-dark md:text-sm dark:border-zinc-800 dark:file:text-zinc-50 dark:placeholder:text-zinc-400 dark:focus-visible:ring-zinc-300',
