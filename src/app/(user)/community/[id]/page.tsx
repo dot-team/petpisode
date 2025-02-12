@@ -1,13 +1,13 @@
 import Image from 'next/image';
 import React from 'react';
 import { Input } from '@/components/common';
+import { SendHorizontal } from 'lucide-react';
 import img from '../../../../../public/images/test1.svg';
-import commentIcon from '../../../../../public/images/commentIcon.svg';
 
 function CommunityDetail() {
     return (
         <div className="flex flex-col items-center justify-center gap-10 mt-6 mb-20">
-            <div className="flex w-[80%] gap-2">
+            <div className="flex w-full gap-2">
                 <div className="w-[100px] h-[100px] rounded-full bg-red-500" />
                 <div className="flex flex-col w-full gap-2">
                     <div className="flex gap-4">
@@ -27,7 +27,7 @@ function CommunityDetail() {
                 </div>
             </div>
             <div className="flex justify-center w-full ">
-                <div className="w-[80%] h-[500px]  rounded-lg">
+                <div className="w-full h-[500px]  rounded-lg">
                     <Image
                         src={img}
                         alt="썸네일"
@@ -37,7 +37,7 @@ function CommunityDetail() {
                     />
                 </div>
             </div>
-            <div className="w-[80%]">
+            <div className="w-full">
                 <p>
                     Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
                     Ipsum has been the industrys standard dummy text ever since the 1500s, when an
@@ -56,7 +56,7 @@ function CommunityDetail() {
                     software like Aldus PageMaker including versions of Lorem Ipsum.
                 </p>
             </div>
-            <div className="w-[80%] flex justify-around items-center ">
+            <div className="flex items-center justify-around w-full ">
                 <ul className="flex items-center justify-around w-full">
                     <li className="flex flex-col items-center">
                         좋아요<span>10</span>
@@ -69,22 +69,16 @@ function CommunityDetail() {
                     </li>
                 </ul>
             </div>
-            <div className=" w-[80%] bg-[#FCFAF6] rounded-lg p-4 flex gap-2 items-center">
+            <div className=" w-full bg-[#FCFAF6] rounded-lg p-4 flex gap-2 items-center">
                 <div className="w-[36px] h-[36px] rounded-full bg-red-50" />
                 <div className="w-full">
                     <Input placeholder="내용을 입력하세요" className="border-none rounded-lg " />
                 </div>
                 <div>
-                    <Image
-                        src={commentIcon}
-                        width={30}
-                        height={30}
-                        alt="입력 버튼"
-                        className="cursor-pointer"
-                    />
+                    <SendHorizontal size={30} color="#3B427C" />
                 </div>
             </div>
-            <div className="w-[80%] flex gap-3 items-center p-4 bg-[#FCFAF6] ">
+            <div className="w-full flex gap-3 items-center p-4 bg-[#FCFAF6] ">
                 <div className="w-[36px] h-[36px] rounded-full bg-red-50" />
                 <div className="flex flex-col flex-1">
                     <div className="flex items-center gap-4">
