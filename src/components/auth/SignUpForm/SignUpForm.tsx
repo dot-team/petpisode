@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { Button, Input, Label, Checkbox } from '@/components';
 
 export function SignupForm() {
@@ -85,6 +86,12 @@ export function SignupForm() {
                     회원가입
                 </Button>
             </form>
+            <div className="flex items-center gap-2 text-sm text-center">
+                <span>이미 계정이 있으신가요?</span>
+                <Link className="text-sm underline" href="/login">
+                    로그인
+                </Link>
+            </div>
         </div>
     );
 }
