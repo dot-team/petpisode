@@ -1,9 +1,7 @@
-'use client';
+import { ReactNode } from 'react';
+import { UserHeader } from '@/components/layout';
 
-import React from 'react';
-import { UserHeader } from '@/components/layout/Header/UserHeader';
-
-export default function UserLayout({ children }: { children: React.ReactNode }) {
+export default function UserLayout({ children }: { children: ReactNode }) {
     return (
         <div className="relative flex flex-col min-h-screen">
             <UserHeader />
