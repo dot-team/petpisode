@@ -1,5 +1,5 @@
 import type { UseCustomToastProps } from '@/types';
-import { toast } from './usetoast';
+import { toast } from './useToast';
 
 export const useErrorToast = ({ title, description }: UseCustomToastProps) => {
     toast({
