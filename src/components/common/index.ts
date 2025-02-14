@@ -3,6 +3,7 @@ export * from './Button/Button';
 export * from './Card/Card';
 export * from './Checkbox/Checkbox';
 export * from './Dialog/Dialog';
+export * from './Form';
 export * from './Input/Input';
 export * from './Label/Label';
 export * from './Select/Select';
