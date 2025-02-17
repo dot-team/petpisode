@@ -23,6 +23,43 @@ const data = [
         category: '건강',
         user_name: '네이버 뉴스',
     },
+    {
+        news_id: '5bee582a-a4c5-4f1a-b58e-5f2eb355c228',
+        title: 'What is Lorem Ipsum?',
+        contents:
+            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+        img_url: '',
+        summary: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+        source: 'https://www.naver.com/',
+        species: '강아지',
+        like: 0,
+        share: 0,
+        is_published: true,
+        is_sended: true,
+        source_published_at: '2025.02.17 12:30',
+        created_at: '2025.02.17 12:30',
+        category: '건강',
+        user_name: '네이버 뉴스',
+    },
+    {
+        news_id: '5bee582a-a4c5-4f1a-b58e-5f2eb355c238',
+        title: 'What is Lorem Ipsum?',
+        contents:
+            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+        img_url:
+            'https://www.fitpetmall.com/wp-content/uploads/2023/10/shutterstock_1275055966-1.png',
+        summary: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+        source: 'https://www.naver.com/',
+        species: '고양이',
+        like: 0,
+        share: 0,
+        is_published: true,
+        is_sended: true,
+        source_published_at: '2025.02.17 12:30',
+        created_at: '2025.02.17 12:30',
+        category: '건강',
+        user_name: '네이버 뉴스',
+    },
 ];
 
 function NewsLetterPage() {
@@ -99,16 +136,18 @@ function NewsLetterPage() {
                                 <div id="newsDate">{news.created_at}</div>
                             </div>
                         </div>
-                        <div
-                            id="newsImg"
-                            className="w-[200px] h-[150px] overflow-hidden flex items-center justify-center"
-                        >
-                            <img
-                                src={news.img_url}
-                                alt="뉴스이미지"
-                                className="w-full h-full object-cover object-center"
-                            />
-                        </div>
+                        {news.img_url && (
+                            <div
+                                id="newsImg"
+                                className="w-[200px] h-[150px] overflow-hidden flex items-center justify-center"
+                            >
+                                <img
+                                    src={news.img_url}
+                                    alt="뉴스이미지"
+                                    className="w-full h-full object-cover object-center"
+                                />
+                            </div>
+                        )}
                     </div>
                 ))}
             </div>
