@@ -38,7 +38,7 @@ const data = [
         is_sended: true,
         source_published_at: '2025.02.17 12:30',
         created_at: '2025.02.17 12:30',
-        category: '건강',
+        category: '훈련',
         user_name: '네이버 뉴스',
     },
     {
@@ -65,13 +65,30 @@ const data = [
 function NewsLetterPage() {
     const [activeCategory, setActiveCategory] = useState('전체');
     const [activeSpecies, setActiveSpecies] = useState('전체');
+    const [listData, setListData] = useState(data);
+
+    const filterData = (category: string, species: string) => {
+        let filteredData = data;
+
+        if (category !== '전체') {
+            filteredData = filteredData.filter(news => news.category === category);
+        }
+
+        if (species !== '전체') {
+            filteredData = filteredData.filter(news => news.species === species);
+        }
+
+        setListData(filteredData);
+    };
 
     const onClickCategory = (category: string) => {
         setActiveCategory(category);
+        filterData(category, activeSpecies);
     };
 
     const onClickSpecies = (species: string) => {
         setActiveSpecies(species);
+        filterData(activeCategory, species);
     };
 
     return (
@@ -82,7 +99,7 @@ function NewsLetterPage() {
                         <li key={category.value} value={category.value}>
                             <button
                                 type="button"
-                                className={`hover:text-primary text-s ${
+                                className={`hover:text-primary text-s outline-none ${
                                     activeCategory === category.label
                                         ? 'text-primary font-bold'
                                         : ''
@@ -99,7 +116,7 @@ function NewsLetterPage() {
                         <li key={species.value} value={species.value}>
                             <button
                                 type="button"
-                                className={`hover:text-primary text-s ${
+                                className={`hover:text-primary text-s outline-none ${
                                     activeSpecies === species.label ? 'text-primary font-bold' : ''
                                 }`}
                                 onClick={() => onClickSpecies(species.label)}
@@ -111,10 +128,10 @@ function NewsLetterPage() {
                 </ul>
             </div>
             <div id="newContentsWrap" className="mt-4 flex flex-wrap">
-                {data.map(news => (
+                {listData.map(news => (
                     <div
                         key={news.news_id}
-                        className="w-full pb-4 mb-4 border-b border-area-gray flex justify-between"
+                        className="w-full pb-4 mb-4 border-b border-area-gray flex justify-between h-[150px]"
                     >
                         <div
                             id="newsText"
