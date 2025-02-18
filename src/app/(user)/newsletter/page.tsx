@@ -4,7 +4,7 @@ import { categoryOptions, speciesOptions } from '@/app/admin/newsletter/collect/
 import Link from 'next/link';
 import React, { useState } from 'react';
 
-const data = [
+export const data = [
     {
         news_id: '5bee582a-a4c5-4f1a-b58e-5f2eb355c218',
         title: 'What is Lorem Ipsum?',
