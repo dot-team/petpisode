@@ -2,6 +2,7 @@
 
 import { categoryOptions, speciesOptions } from '@/app/admin/newsletter/collect/page';
 import Link from 'next/link';
+import { Heart, Share } from 'lucide-react';
 import React, { useState } from 'react';
 
 export const data = [
@@ -15,12 +16,12 @@ export const data = [
         summary: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
         source: 'https://www.naver.com/',
         species: '강아지',
-        like: 0,
-        share: 0,
+        like: 10,
+        share: 20,
         is_published: true,
         is_sended: true,
         source_published_at: '2025.02.17 12:30:10',
-        created_at: '2025.02.17 12:40:10',
+        created_at: '2025.02.18 23:53:10',
         category: '건강',
         user_name: '네이버 뉴스',
     },
@@ -92,6 +93,24 @@ function NewsLetterPage() {
         filterData(activeCategory, species);
     };
 
+    const onClickLikeBtn = () => {
+        console.log('like');
+    };
+
+    // const onClickBookmarkBtn = () => {
+    //     console.log('bookmark');
+    // };
+
+    const onClickShareBtn = () => {
+        console.log('share');
+    };
+
+    const isLiked = (newsId: string) => {
+        if (newsId) return false;
+
+        return false;
+    };
+
     return (
         <div>
             <div id="filterWrap">
@@ -155,8 +174,41 @@ function NewsLetterPage() {
                                     >
                                         {news.contents}
                                     </div>
-                                    <div id="newsBottomWrap" className="text-s text-dot-gray-dark">
+                                    <div
+                                        id="newsBottomWrap"
+                                        className="flex text-s text-dot-gray-dark items-center"
+                                    >
                                         <div id="newsDate">{news.created_at}</div>
+                                        <div className="flex gap-4 ml-4">
+                                            <div className="flex gap-1 items-center text-secondary">
+                                                <button
+                                                    type="button"
+                                                    onClick={onClickLikeBtn}
+                                                    className="outline-none"
+                                                >
+                                                    <Heart
+                                                        className={`w-4 ${isLiked(news.news_id) ? 'fill-current' : ''}`}
+                                                    />
+                                                </button>
+                                                <div>{news.like}</div>
+                                            </div>
+                                            {/* <div className="flex gap-1 items-center text-secondary">
+                                                <button type="button" onClick={onClickBookmarkBtn} className="outline-none">
+                                                    <Bookmark className={`w-4 ${news.isBookmarked ? 'fill-current' : ''}`} />
+                                                </button>
+                                                <div>{news.bookmark}</div>
+                                            </div> */}
+                                            <div className="flex gap-1 items-center text-secondary">
+                                                <button
+                                                    type="button"
+                                                    onClick={onClickShareBtn}
+                                                    className="outline-none"
+                                                >
+                                                    <Share className="w-4" />
+                                                </button>
+                                                <div>{news.share}</div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 {news.img_url && (
