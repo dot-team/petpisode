@@ -1,6 +1,7 @@
 'use client';
 
 import { categoryOptions, speciesOptions } from '@/app/admin/newsletter/collect/page';
+import Link from 'next/link';
 import React, { useState } from 'react';
 
 const data = [
@@ -18,8 +19,8 @@ const data = [
         share: 0,
         is_published: true,
         is_sended: true,
-        source_published_at: '2025.02.17 12:30',
-        created_at: '2025.02.17 12:30',
+        source_published_at: '2025.02.17 12:30:10',
+        created_at: '2025.02.17 12:40:10',
         category: '건강',
         user_name: '네이버 뉴스',
     },
@@ -36,8 +37,8 @@ const data = [
         share: 0,
         is_published: true,
         is_sended: true,
-        source_published_at: '2025.02.17 12:30',
-        created_at: '2025.02.17 12:30',
+        source_published_at: '2025.02.17 12:30:20',
+        created_at: '2025.02.17 12:40:20',
         category: '훈련',
         user_name: '네이버 뉴스',
     },
@@ -55,8 +56,8 @@ const data = [
         share: 0,
         is_published: true,
         is_sended: true,
-        source_published_at: '2025.02.17 12:30',
-        created_at: '2025.02.17 12:30',
+        source_published_at: '2025.02.17 12:30:30',
+        created_at: '2025.02.17 12:40:00',
         category: '건강',
         user_name: '네이버 뉴스',
     },
@@ -132,40 +133,45 @@ function NewsLetterPage() {
                     {listData.map(news => (
                         <div
                             key={news.news_id}
-                            className="w-full pb-4 mb-4 border-b border-area-gray flex justify-between h-[150px]"
+                            className="w-full mb-4 pb-4 border-b border-area-gray flex justify-between h-[150px]"
                         >
-                            <div
-                                id="newsText"
-                                className={`${news.img_url ? 'w-4/5' : 'w-full'} flex flex-col justify-around`}
+                            <Link
+                                className="w-full flex justify-between"
+                                href={`/newsletter/${news.news_id}`}
                             >
-                                <div id="newsSource" className="text-xs text-dot-gray-dark">
-                                    {news.user_name}
-                                </div>
-                                <div id="newsTitle" className="font-bold">
-                                    {news.title}
-                                </div>
                                 <div
-                                    id="newsContents"
-                                    className="text-s text-dot-gray-dark2 line-clamp-2"
+                                    id="newsText"
+                                    className={`${news.img_url ? 'w-4/5' : 'w-full'} flex flex-col justify-around`}
                                 >
-                                    {news.contents}
+                                    <div id="newsSource" className="text-xs text-dot-gray-dark">
+                                        {news.user_name}
+                                    </div>
+                                    <div id="newsTitle" className="font-bold">
+                                        {news.title}
+                                    </div>
+                                    <div
+                                        id="newsContents"
+                                        className="text-s text-dot-gray-dark2 line-clamp-2"
+                                    >
+                                        {news.contents}
+                                    </div>
+                                    <div id="newsBottomWrap" className="text-s text-dot-gray-dark">
+                                        <div id="newsDate">{news.created_at}</div>
+                                    </div>
                                 </div>
-                                <div id="newsBottomWrap" className="text-s text-dot-gray-dark">
-                                    <div id="newsDate">{news.created_at}</div>
-                                </div>
-                            </div>
-                            {news.img_url && (
-                                <div
-                                    id="newsImg"
-                                    className="w-[200px] h-[150px] overflow-hidden flex items-center justify-center"
-                                >
-                                    <img
-                                        src={news.img_url}
-                                        alt="뉴스이미지"
-                                        className="w-full h-full object-cover object-center"
-                                    />
-                                </div>
-                            )}
+                                {news.img_url && (
+                                    <div
+                                        id="newsImg"
+                                        className="w-[200px] h-[130px] overflow-hidden flex items-center justify-center"
+                                    >
+                                        <img
+                                            src={news.img_url}
+                                            alt="뉴스이미지"
+                                            className="w-full h-full object-cover object-center"
+                                        />
+                                    </div>
+                                )}
+                            </Link>
                         </div>
                     ))}
                 </div>
