@@ -1,13 +1,16 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import React from 'react';
+import React, { useState } from 'react';
+import { Heart, Bookmark, Share } from 'lucide-react';
 import { data } from '../page';
 
 function NewsLetterDetailPage() {
     const params = useParams();
     const newsId = params.id;
     const news = data.find(item => item.news_id === newsId);
+    const [isLiked] = useState(false);
+    const [isBookmarked] = useState(false);
 
     const formatRelativeTime = (timestamp?: string) => {
         if (!timestamp) return '';
@@ -33,6 +36,18 @@ function NewsLetterDetailPage() {
         return `${diffInDays}일 전`;
     };
 
+    const onClickLikeBtn = () => {
+        console.log('like');
+    };
+
+    const onClickBookmarkBtn = () => {
+        console.log('bookmark');
+    };
+
+    const onClickShareBtn = () => {
+        console.log('share');
+    };
+
     return (
         <div>
             <div className="text-s flex gap-4">
@@ -50,6 +65,26 @@ function NewsLetterDetailPage() {
                 </div>
             )}
             <div className="">{news?.contents}</div>
+            <div className="flex justify-evenly my-4">
+                <div className="flex flex-col items-center text-secondary">
+                    <button type="button" onClick={onClickLikeBtn} className="outline-none">
+                        <Heart className={`${isLiked ? 'fill-current' : ''}`} />
+                    </button>
+                    <div>0</div>
+                </div>
+                <div className="flex flex-col items-center text-secondary">
+                    <button type="button" onClick={onClickBookmarkBtn} className="outline-none">
+                        <Bookmark className={`${isBookmarked ? 'fill-current' : ''}`} />
+                    </button>
+                    <div>0</div>
+                </div>
+                <div className="flex flex-col items-center text-secondary">
+                    <button type="button" onClick={onClickShareBtn} className="outline-none">
+                        <Share />
+                    </button>
+                    <div>0</div>
+                </div>
+            </div>
         </div>
     );
 }
