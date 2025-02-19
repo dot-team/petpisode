@@ -1,31 +1,49 @@
 'use server';
 
+import { AuthError, Session, User } from '@supabase/supabase-js';
 import type { SignupFormType } from '@/hooks';
 import createClientForServer from '../server';
 
-const signupWithEmailPassword = async (formData: SignupFormType) => {
-    const supabase = await createClientForServer();
+interface SignupResponse {
+    error: AuthError | null;
+    data: {
+        user: User | null;
+        session: Session | null;
+    };
+}
 
-    const newsSubscribeType = [];
-    if (formData.agreeEmailNews) newsSubscribeType.push('email');
-    if (formData.agreeWebPushNews) newsSubscribeType.push('web push');
+const signupWithEmailPassword = async (formData: SignupFormType): Promise<SignupResponse> => {
+    try {
+        const supabase = await createClientForServer();
 
-    const { error } = await supabase.auth.signUp({
-        email: formData.email,
-        password: formData.password,
-        options: {
-            data: {
-                nickname: formData.nickname,
-                news_subscribe: formData.agreeEmailNews || formData.agreeWebPushNews,
-                news_subscribe_type: newsSubscribeType.join('|'),
-                provider: 'email',
+        const newsSubscribeType = [];
+        if (formData.agreeEmailNews) newsSubscribeType.push('email');
+        if (formData.agreeWebPushNews) newsSubscribeType.push('web push');
+
+        const { data, error } = await supabase.auth.signUp({
+            email: formData.email,
+            password: formData.password,
+            options: {
+                data: {
+                    nickname: formData.nickname,
+                    news_subscribe: formData.agreeEmailNews || formData.agreeWebPushNews,
+                    news_subscribe_type: newsSubscribeType.join('|'),
+                    provider: 'email',
+                },
             },
-        },
-    });
+        });
 
-    if (error) {
-        console.log(error);
-        throw error;
+        if (error) {
+            if (error.code === 'email_exists') {
+                throw new Error('이미 등록된 이메일입니다.');
+            }
+            throw new Error(error.message || '회원가입 중 오류가 발생했습니다.');
+        }
+
+        return { data, error };
+    } catch (error) {
+        console.error('Signup error:', error);
+        throw new Error(error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.');
     }
 };
 

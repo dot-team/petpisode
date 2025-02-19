@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,8 +10,15 @@ import { useErrorToast } from './useErrorToast';
 
 const signupSchema = z
     .object({
-        email: z.string().email('유효한 이메일 주소를 입력해주세요'),
-        nickname: z.string().min(2, '닉네임은 2글자 이상이어야 합니다'),
+        email: z
+            .string()
+            .email('유효한 이메일 주소를 입력해주세요')
+            .min(1, '이메일을 입력해주세요'),
+        nickname: z
+            .string()
+            .min(2, '닉네임은 2글자 이상이어야 합니다')
+            .max(20, '닉네임은 20글자 이하여야 합니다')
+            .regex(/^[가-힣a-zA-Z0-9]+$/, '닉네임은 한글, 영문, 숫자만 사용 가능합니다'),
         password: z.string().min(8, '비밀번호는 8자 이상이어야 합니다'),
         passwordConfirm: z.string(),
         agreeService: z.boolean(),
@@ -35,7 +41,6 @@ export function useSignupForm() {
     const router = useRouter();
     const successToast = useSuccessToast;
     const errorToast = useErrorToast;
-    const [isLoading, setIsLoading] = useState(false);
 
     const form = useForm<SignupFormType>({
         resolver: zodResolver(signupSchema),
@@ -53,7 +58,6 @@ export function useSignupForm() {
 
     const onSubmit = async (data: SignupFormType) => {
         try {
-            setIsLoading(true);
             await signupWithEmailPassword(data);
 
             successToast({
@@ -68,21 +72,21 @@ export function useSignupForm() {
                 description:
                     error instanceof Error ? error.message : '회원가입 중 오류가 발생했습니다.',
             });
-        } finally {
-            setIsLoading(false);
         }
     };
 
     const handleAllAgreements = (checked: boolean) => {
-        form.setValue('agreeService', checked);
-        form.setValue('agreePrivacy', checked);
-        form.setValue('agreeEmailNews', checked);
-        form.setValue('agreeWebPushNews', checked);
+        form.reset({
+            ...form.getValues(),
+            agreeService: checked,
+            agreePrivacy: checked,
+            agreeEmailNews: checked,
+            agreeWebPushNews: checked,
+        });
     };
 
     return {
         form,
-        isLoading,
         onSubmit,
         handleAllAgreements,
     };
