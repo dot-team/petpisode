@@ -34,7 +34,10 @@ function EpisodePage() {
                     <Label htmlFor="content" className="pt-3 w-14 flex justify-end items-baseline">
                         내용
                     </Label>
-                    <Textarea variant="secondary" className="border-none rounded-lg h-32" />
+                    <Textarea
+                        variant="secondary"
+                        className="border-none rounded-lg h-32 resize-none"
+                    />
                 </div>
                 <div className="flex gap-4 items-start">
                     <Label htmlFor="imgFile" className="pt-3 w-14 flex justify-end">
