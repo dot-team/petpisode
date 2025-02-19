@@ -9,6 +9,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/common/Select/Select';
+import axios from 'axios';
 import { MoveRight } from 'lucide-react';
 import React, { useState } from 'react';
 
@@ -104,7 +105,26 @@ function NewsletterCollect() {
         }
     };
 
-    const onClickAPIRequestBtn = () => {};
+    const onClickAPIRequestBtn = () => {
+        const fetchNews = async () => {
+            try {
+                const response = await axios.get(`/api/naver-news`, {
+                    params: {
+                        query: '반려동물',
+                        sort: 'sim',
+                        display: 4,
+                    },
+                });
+                console.log('✅ 네이버 뉴스 응답 데이터:', response.data);
+                return response.data;
+            } catch (error) {
+                console.error('❌ 뉴스 데이터 요청 실패:', error);
+                return null;
+            }
+        };
+
+        fetchNews();
+    };
     const onClickSaveDBBtn = () => {};
     const onClickClearSheetBtn = () => {};
     return (
