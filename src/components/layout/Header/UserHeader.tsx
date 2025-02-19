@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { Search } from 'lucide-react';
 import { Button, Input } from '@/components';
 import { LoginDialog } from '@/components/auth';
-import { NAV_ITEM } from '@/constants';
+import { NAV_ITEM, URL } from '@/constants';
 import { useAuth } from '@/hooks';
 import { useUserStore } from '@/stores';
 import Logo from '/public/images/logo.svg';
@@ -21,7 +21,7 @@ export function UserHeader() {
             <div className="container flex justify-between items-center h-16">
                 <div className="flex items-center gap-6 md:gap-8 lg:gap-10">
                     {/* Logo */}
-                    <Link href="/">
+                    <Link href={URL.HOME.link}>
                         <Image
                             src={Logo}
                             alt="Petpisode"
