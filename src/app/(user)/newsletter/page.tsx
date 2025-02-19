@@ -1,7 +1,240 @@
-import React from 'react';
+'use client';
+
+import { categoryOptions, speciesOptions } from '@/app/admin/newsletter/collect/page';
+import Link from 'next/link';
+import { Heart, Share } from 'lucide-react';
+import React, { useState } from 'react';
+
+export const data = [
+    {
+        news_id: '5bee582a-a4c5-4f1a-b58e-5f2eb355c218',
+        title: 'What is Lorem Ipsum?',
+        contents:
+            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+        img_url:
+            'https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=0.752xw:1.00xh;0.175xw,0&resize=1200:*',
+        summary: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+        source: 'https://www.naver.com/',
+        species: '강아지',
+        like: 10,
+        share: 20,
+        is_published: true,
+        is_sended: true,
+        source_published_at: '2025.02.17 12:30:10',
+        created_at: '2025.02.18 23:53:10',
+        category: '건강',
+        user_name: '네이버 뉴스',
+    },
+    {
+        news_id: '5bee582a-a4c5-4f1a-b58e-5f2eb355c228',
+        title: 'What is Lorem Ipsum?',
+        contents:
+            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+        img_url: '',
+        summary: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+        source: 'https://www.naver.com/',
+        species: '강아지',
+        like: 0,
+        share: 0,
+        is_published: true,
+        is_sended: true,
+        source_published_at: '2025.02.17 12:30:20',
+        created_at: '2025.02.17 12:40:20',
+        category: '훈련',
+        user_name: '네이버 뉴스',
+    },
+    {
+        news_id: '5bee582a-a4c5-4f1a-b58e-5f2eb355c238',
+        title: 'What is Lorem Ipsum?',
+        contents:
+            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+        img_url:
+            'https://www.fitpetmall.com/wp-content/uploads/2023/10/shutterstock_1275055966-1.png',
+        summary: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+        source: 'https://www.naver.com/',
+        species: '고양이',
+        like: 0,
+        share: 0,
+        is_published: true,
+        is_sended: true,
+        source_published_at: '2025.02.17 12:30:30',
+        created_at: '2025.02.17 12:40:00',
+        category: '건강',
+        user_name: '네이버 뉴스',
+    },
+];
 
 function NewsLetterPage() {
-    return <div>newsletter</div>;
+    const [activeCategory, setActiveCategory] = useState('전체');
+    const [activeSpecies, setActiveSpecies] = useState('전체');
+    const [listData, setListData] = useState(data);
+
+    const filterData = (category: string, species: string) => {
+        let filteredData = data;
+
+        if (category !== '전체') {
+            filteredData = filteredData.filter(news => news.category === category);
+        }
+
+        if (species !== '전체') {
+            filteredData = filteredData.filter(news => news.species === species);
+        }
+
+        setListData(filteredData);
+    };
+
+    const onClickCategory = (category: string) => {
+        setActiveCategory(category);
+        filterData(category, activeSpecies);
+    };
+
+    const onClickSpecies = (species: string) => {
+        setActiveSpecies(species);
+        filterData(activeCategory, species);
+    };
+
+    const onClickLikeBtn = () => {
+        console.log('like');
+    };
+
+    // const onClickBookmarkBtn = () => {
+    //     console.log('bookmark');
+    // };
+
+    const onClickShareBtn = () => {
+        console.log('share');
+    };
+
+    const isLiked = (newsId: string) => {
+        if (newsId) return false;
+
+        return false;
+    };
+
+    return (
+        <div>
+            <div id="filterWrap">
+                <ul id="categoryFilter" className="flex gap-20">
+                    {categoryOptions.map(category => (
+                        <li key={category.value} value={category.value}>
+                            <button
+                                type="button"
+                                className={`hover:text-primary text-s outline-none ${
+                                    activeCategory === category.label
+                                        ? 'text-primary font-bold'
+                                        : ''
+                                }`}
+                                onClick={() => onClickCategory(category.label)}
+                            >
+                                {category.label}
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+                <ul id="speciesFilter" className="mt-2 flex gap-20">
+                    {speciesOptions.map(species => (
+                        <li key={species.value} value={species.value}>
+                            <button
+                                type="button"
+                                className={`hover:text-primary text-s outline-none ${
+                                    activeSpecies === species.label ? 'text-primary font-bold' : ''
+                                }`}
+                                onClick={() => onClickSpecies(species.label)}
+                            >
+                                {species.label}
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+            {listData && (
+                <div id="newContentsWrap" className="mt-4 flex flex-wrap">
+                    {listData.map(news => (
+                        <div
+                            key={news.news_id}
+                            className="w-full mb-4 pb-4 border-b border-area-gray flex justify-between h-[150px]"
+                        >
+                            <Link
+                                className="w-full flex justify-between"
+                                href={`/newsletter/${news.news_id}`}
+                            >
+                                <div
+                                    id="newsText"
+                                    className={`${news.img_url ? 'w-4/5' : 'w-full'} flex flex-col justify-around`}
+                                >
+                                    <div id="newsSource" className="text-xs text-dot-gray-dark">
+                                        {news.user_name}
+                                    </div>
+                                    <div id="newsTitle" className="font-bold">
+                                        {news.title}
+                                    </div>
+                                    <div
+                                        id="newsContents"
+                                        className="text-s text-dot-gray-dark2 line-clamp-2"
+                                    >
+                                        {news.contents}
+                                    </div>
+                                    <div
+                                        id="newsBottomWrap"
+                                        className="flex text-s text-dot-gray-dark items-center"
+                                    >
+                                        <div id="newsDate">{news.created_at}</div>
+                                        <div className="flex gap-4 ml-4">
+                                            <div className="flex gap-1 items-center text-secondary">
+                                                <button
+                                                    type="button"
+                                                    onClick={onClickLikeBtn}
+                                                    className="outline-none"
+                                                >
+                                                    <Heart
+                                                        className={`w-4 ${isLiked(news.news_id) ? 'fill-current' : ''}`}
+                                                    />
+                                                </button>
+                                                <div>{news.like}</div>
+                                            </div>
+                                            {/* <div className="flex gap-1 items-center text-secondary">
+                                                <button type="button" onClick={onClickBookmarkBtn} className="outline-none">
+                                                    <Bookmark className={`w-4 ${news.isBookmarked ? 'fill-current' : ''}`} />
+                                                </button>
+                                                <div>{news.bookmark}</div>
+                                            </div> */}
+                                            <div className="flex gap-1 items-center text-secondary">
+                                                <button
+                                                    type="button"
+                                                    onClick={onClickShareBtn}
+                                                    className="outline-none"
+                                                >
+                                                    <Share className="w-4" />
+                                                </button>
+                                                <div>{news.share}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {news.img_url && (
+                                    <div
+                                        id="newsImg"
+                                        className="w-[200px] h-[130px] overflow-hidden flex items-center justify-center"
+                                    >
+                                        <img
+                                            src={news.img_url}
+                                            alt="뉴스이미지"
+                                            className="w-full h-full object-cover object-center"
+                                        />
+                                    </div>
+                                )}
+                            </Link>
+                        </div>
+                    ))}
+                </div>
+            )}
+            {listData.length === 0 && (
+                <div className="mt-8 text-s text-dot-gray-dark flex justify-center">
+                    해당 뉴스레터가 존재하지 않습니다.
+                </div>
+            )}
+        </div>
+    );
 }
 
 export default NewsLetterPage;
