@@ -1,60 +1,65 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import supabaseClient from '@/lib/supabase/client';
 import { useUserActions, useUserStore } from '@/stores';
+import { signinWithEmailPassword, signOut } from '@/lib/supabase/actions/signIn';
+import { LoginFormState } from '@/types';
 
 export function useAuth() {
     const router = useRouter();
     const { user, isUserLoading } = useUserStore();
-    const { setUser, setUserLoading } = useUserActions();
+    const { clearUser, setUserLoading } = useUserActions();
 
-    useEffect(() => {
-        // 현재 세션 확인
-        const checkSession = async () => {
+    // 이메일/비밀번호 로그인
+    const handleEmailLogin = useCallback(
+        async (email: string, password: string): Promise<LoginFormState> => {
             try {
-                const {
-                    data: { session },
-                } = await supabaseClient.auth.getSession();
-                setUser(session?.user ?? null);
+                setUserLoading(true);
+                const formData = new FormData();
+                formData.append('email', email);
+                formData.append('password', password);
+
+                const result = await signinWithEmailPassword({}, formData);
+
+                if (result.success) {
+                    router.push('/');
+                    router.refresh();
+                }
+
+                return result;
+            } catch (error) {
+                return {
+                    errors: {
+                        general: ['로그인 중 오류가 발생했습니다.'],
+                    },
+                };
             } finally {
                 setUserLoading(false);
             }
-        };
+        },
+        [router, setUserLoading],
+    );
 
-        checkSession();
-
-        // 인증 상태 변경 구독
-        const {
-            data: { subscription },
-        } = supabaseClient.auth.onAuthStateChange((event, session) => {
-            setUser(session?.user ?? null);
-
-            if (event === 'SIGNED_IN') {
-                router.refresh();
-            }
-        });
-
-        return () => {
-            subscription.unsubscribe();
-        };
-    }, [router, setUser, setUserLoading]);
-
-    const signOut = async () => {
+    const handleSignOut = useCallback(async () => {
         try {
-            await supabaseClient.auth.signOut();
+            setUserLoading(true);
+            await signOut();
+            clearUser();
+            router.push('/login');
             router.refresh();
         } catch (error) {
-            console.error('Logout error:', error);
-            throw error;
+            console.error('Sign out failed:', error);
+        } finally {
+            setUserLoading(false);
         }
-    };
+    }, [clearUser, router, setUserLoading]);
 
     return {
         user,
         isUserLoading,
         isAuthenticated: !!user,
-        signOut,
+        handleEmailLogin,
+        handleSignOut,
     };
 }
