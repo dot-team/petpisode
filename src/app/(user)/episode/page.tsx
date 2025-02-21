@@ -19,14 +19,14 @@ function EpisodePage() {
                     여러분의 이야기는 더 많은 사람들에게 기쁨과 감동을 전할 수 있습니다.
                 </div>
             </div>
-            <div className="bg-secondary-light h-80 rounded-dot-s px-6 flex flex-col justify-evenly">
+            <div className="bg-area h-80 rounded-dot-s px-6 flex flex-col justify-evenly">
                 <div className="flex gap-4 items-center">
                     <Label htmlFor="title" className="w-14 flex justify-end">
                         제목
                     </Label>
                     <Input
                         placeholder="제목을 입력하세요"
-                        variant="secondary"
+                        variant="primary"
                         className="border-none rounded-lg"
                     />
                 </div>
@@ -35,7 +35,7 @@ function EpisodePage() {
                         내용
                     </Label>
                     <Textarea
-                        variant="secondary"
+                        variant="primary"
                         className="border-none rounded-lg h-32 resize-none"
                     />
                 </div>
@@ -43,9 +43,9 @@ function EpisodePage() {
                     <Label htmlFor="imgFile" className="pt-3 w-14 flex justify-end">
                         첨부파일
                     </Label>
-                    <Input variant="secondary" className="border-none rounded-lg" />
+                    <Input variant="primary" className="border-none rounded-lg" />
                 </div>
-                <Button onClick={onClickSendBtn} variant="secondary" className="w-20 mx-auto">
+                <Button onClick={onClickSendBtn} variant="primary" className="w-20 mx-auto">
                     보내기
                 </Button>
             </div>
