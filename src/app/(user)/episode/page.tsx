@@ -13,7 +13,7 @@ function EpisodePage() {
             <div className="mb-4">
                 <div className="text-l font-bold">우리와 함께 특별한 이야기를 나눠보세요!</div>
                 <div className="mt-2">
-                    애완동물과의 특별한 순간, 훈훈한 에피소드, 그리고 산책 중 있었던 재미있는 경험을
+                    반려동물과의 특별한 순간, 훈훈한 에피소드, 그리고 산책 중 있었던 재미있는 경험을
                     공유해 주세요.
                     <br />
                     여러분의 이야기는 더 많은 사람들에게 기쁨과 감동을 전할 수 있습니다.
