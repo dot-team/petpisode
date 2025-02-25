@@ -9,6 +9,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/common/Select/Select';
+import { useErrorToast, useSuccessToast } from '@/hooks';
+import { createDataFromClient } from '@/services';
 import axios from 'axios';
 import { MoveRight } from 'lucide-react';
 import React, { useState } from 'react';
@@ -74,12 +76,25 @@ const speciesOptions = [
     { value: 'cat', label: '고양이' },
 ];
 
+interface RawPreNewsItem {
+    description: string;
+    link: string;
+    originallink: string;
+    pubDate: string;
+    title: string;
+}
+
 function NewsletterCollect() {
+    const successToast = useSuccessToast;
+    const errorToast = useErrorToast;
     const [availableData, setAvailableData] = useState(data);
     const [selectedData, setSelectedData] = useState<{ [key: string]: string; news_id: string }[]>(
         [],
     );
     const selectedIds = new Set(selectedData.map(item => item.news_id));
+    const [searchWord, setSearchWord] = useState('');
+    const [selectedSize, setSelectedSize] = useState(10);
+    const [selectedSort, setSelectedSort] = useState('date');
 
     const handleCheckboxChange = (news_id: string, isChecked: boolean) => {
         if (isChecked) {
@@ -105,25 +120,55 @@ function NewsletterCollect() {
         }
     };
 
+    const cleanText = (str: string) => {
+        // 1. <b> 태그 제거
+        const withoutBoldTags = str.replace(/<b>/g, '').replace(/<\/b>/g, '');
+
+        // 2. HTML 엔티티 변환
+        const textarea = document.createElement('textarea');
+        textarea.innerHTML = withoutBoldTags;
+        return textarea.value;
+    };
+
     const onClickAPIRequestBtn = () => {
         const fetchNews = async () => {
             try {
                 const response = await axios.get(`/api/naver-news`, {
                     params: {
-                        query: '반려동물',
+                        query: searchWord,
                         sort: 'sim',
-                        display: 4,
+                        display: selectedSize,
                     },
                 });
-                console.log('✅ 네이버 뉴스 응답 데이터:', response.data);
-                return response.data;
+                const preData = response.data.items.map((item: RawPreNewsItem) => ({
+                    ...item,
+                    title: cleanText(item.title),
+                    description: cleanText(item.description),
+                }));
+
+                await createDataFromClient('pre_news_items', preData);
+                successToast({
+                    title: '네이버 뉴스 API 호출 성공',
+                    description: '네이버 뉴스 API 데이터가 1차 DB에 저장되었습니다.',
+                });
+                return preData;
             } catch (error) {
+                errorToast({
+                    title: '네이버 뉴스 API 호출 실패',
+                    description: '네이버 뉴스 API 호출 또는 1차 DB에의 저장이 실패했습니다.',
+                });
                 console.error('❌ 뉴스 데이터 요청 실패:', error);
                 return null;
             }
         };
-
-        fetchNews();
+        if (!selectedSize || searchWord === '' || !selectedSort) {
+            errorToast({
+                title: '네이버 뉴스 API 호출 실패',
+                description: '검색 내용을 입력해주세요.',
+            });
+        } else {
+            fetchNews();
+        }
     };
     const onClickSaveDBBtn = () => {};
     const onClickClearSheetBtn = () => {};
@@ -135,14 +180,25 @@ function NewsletterCollect() {
                         <Label htmlFor="searchWord" className="flex items-center">
                             검색어
                         </Label>
-                        <Input id="searchWord" className="w-36" variant="admin" />
+                        <Input
+                            id="searchWord"
+                            type="text"
+                            placeholder="검색어 입력"
+                            value={searchWord}
+                            onChange={e => setSearchWord(e.target.value)}
+                            className="w-36"
+                            variant="admin"
+                        />
                     </div>
                     <div className="flex gap-1">
-                        <Label htmlFor="count" className="flex items-center">
+                        <Label htmlFor="size" className="flex items-center">
                             개수
                         </Label>
-                        <Select defaultValue="10">
-                            <SelectTrigger id="count" variant="admin" className="w-32 bg-dot-white">
+                        <Select
+                            defaultValue={String(selectedSize)}
+                            onValueChange={value => setSelectedSize(Number(value))}
+                        >
+                            <SelectTrigger id="size" variant="admin" className="w-32 bg-dot-white">
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -156,7 +212,7 @@ function NewsletterCollect() {
                         <Label htmlFor="sort" className="flex items-center">
                             정렬
                         </Label>
-                        <Select defaultValue="date">
+                        <Select defaultValue={selectedSort} onValueChange={setSelectedSort}>
                             <SelectTrigger id="sort" variant="admin" className="w-32 bg-dot-white">
                                 <SelectValue />
                             </SelectTrigger>

@@ -279,6 +279,36 @@ export type Database = {
                 };
                 Relationships: [];
             };
+            pre_news_items: {
+                Row: {
+                    pre_news_id: string;
+                    description: string;
+                    link: string;
+                    originallink: string;
+                    pubDate: string;
+                    title: string;
+                    created_at: string;
+                };
+                Insert: {
+                    pre_news_id?: string;
+                    description?: string;
+                    link?: string;
+                    originallink?: string;
+                    pubDate?: string;
+                    title?: string;
+                    created_at?: string;
+                };
+                Update: {
+                    pre_news_id?: string;
+                    description?: string;
+                    link?: string;
+                    originallink?: string;
+                    pubDate?: string;
+                    title?: string;
+                    created_at?: string;
+                };
+                Relationships: [];
+            };
             news_items: {
                 Row: {
                     category_id: string;

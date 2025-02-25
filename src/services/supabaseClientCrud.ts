@@ -22,9 +22,12 @@ export const fetchDataByIdFromClient = async <T extends TableName>(
 
 export const createDataFromClient = async <T extends TableName>(
     table: T,
-    payload: TablesInsert<T>,
-): Promise<TablesInsert<T>> => {
-    const response = await axios.post<TablesInsert<T>>(SUPABASE_ENDPOINT.BY_TABLE(table), payload);
+    payload: TablesInsert<T> | TablesInsert<T>[], // 단일 객체 또는 배열 지원
+): Promise<TablesInsert<T> | TablesInsert<T>[]> => {
+    const response = await axios.post<TablesInsert<T> | TablesInsert<T>[]>(
+        SUPABASE_ENDPOINT.BY_TABLE(table),
+        payload,
+    );
     return response.data;
 };
 
