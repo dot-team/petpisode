@@ -1,14 +1,20 @@
 import Link from 'next/link';
 import { Button } from '@/components';
 import { URL } from '@/constants';
-import { signInWithGoogle } from '@/lib/supabase/actions';
+import { signInWithGoogle, signInWithKakao } from '@/lib/supabase/actions';
 
 function LoginButtons() {
     return (
         <div className="w-full space-y-3">
-            <Button className="w-full bg-[#FEE500] hover:bg-[#FEE500]/80 text-dot-black" size="lg">
-                카카오로 로그인
-            </Button>
+            <form>
+                <Button
+                    formAction={signInWithKakao}
+                    className="w-full bg-[#FEE500] hover:bg-[#FEE500]/80 text-dot-black"
+                    size="lg"
+                >
+                    카카오로 로그인
+                </Button>
+            </form>
 
             <form>
                 <Button
