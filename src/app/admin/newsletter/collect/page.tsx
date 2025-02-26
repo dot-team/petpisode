@@ -15,7 +15,7 @@ import { fetchPreNewsData } from '@/hooks/usePreNewsData';
 import usePreNewsItem, { PreNewsItem } from '@/hooks/usePreNewsItem';
 import { createMultipleDataFromClient } from '@/services';
 import { MoveRight } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 const leftHeader = ['제목', '게시일자'];
 const rightHeader = ['제목', '게시일자', '카테고리', '종'];
@@ -24,6 +24,8 @@ function NewsletterCollect() {
     const [searchWord, setSearchWord] = useState('');
     const [selectedSize, setSelectedSize] = useState(10);
     const [selectedSort, setSelectedSort] = useState('date');
+    const [selectedCategory, setSelectedCategory] = useState('all');
+    const [selectedSpecies, setSelectedSpecies] = useState('all');
     const successToast = useSuccessToast;
     const errorToast = useErrorToast;
     const { categoryOptions, speciesOptions } = useFetchOptions();
@@ -94,6 +96,14 @@ function NewsletterCollect() {
         }
     };
 
+    const filteredData = useMemo(() => {
+        return availableData.filter(item => {
+            const categoryMatch = selectedCategory === 'all' || item.category === selectedCategory;
+            const speciesMatch = selectedSpecies === 'all' || item.species === selectedSpecies;
+            return categoryMatch && speciesMatch;
+        });
+    }, [availableData, selectedCategory, selectedSpecies]);
+
     const onClickSaveDBBtn = () => {};
     const onClickClearSheetBtn = () => {};
     return (
@@ -159,7 +169,10 @@ function NewsletterCollect() {
                             <Label htmlFor="category" className="flex items-center">
                                 카테고리
                             </Label>
-                            <Select defaultValue="all">
+                            <Select
+                                defaultValue={selectedCategory}
+                                onValueChange={setSelectedCategory}
+                            >
                                 <SelectTrigger
                                     id="category"
                                     variant="admin"
@@ -188,7 +201,10 @@ function NewsletterCollect() {
                             <Label htmlFor="species" className="flex items-center">
                                 종
                             </Label>
-                            <Select defaultValue="all">
+                            <Select
+                                defaultValue={selectedSpecies}
+                                onValueChange={setSelectedSpecies}
+                            >
                                 <SelectTrigger
                                     id="species"
                                     variant="admin"
@@ -214,7 +230,7 @@ function NewsletterCollect() {
 
                     <AdminNewletterCollectTable
                         header={leftHeader}
-                        data={availableData}
+                        data={filteredData}
                         side="left"
                         onCheckboxChange={handleCheckboxChange}
                         selectedIds={selectedIds}
