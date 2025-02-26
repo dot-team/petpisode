@@ -75,7 +75,7 @@ export default {
                 xl: 'var(--space-xlarge)',
             },
             content: {
-                space: '"내용을 입력해주세요."',
+                // space: '"내용을 입력해주세요."',
             },
         },
     },

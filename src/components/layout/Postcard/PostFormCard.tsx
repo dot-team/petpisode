@@ -112,10 +112,12 @@ function PostFormCard() {
                                     suppressContentEditableWarning
                                     className="border-none rounded-t-none focus:none
                                     focus-visible:ring-0 bg-[#FCFAF6] w-full text-xl p-3
-                                    focus-visible:outline-none break-all before:text-xl
-                                    focus:before:content-[''] before:content-space
-                                    overflow-auto max-h-64"
+                                    focus-visible:outline-none break-all before:text-xl                                    
+                                    overflow-auto max-h-64
+                                    empty:before:content-['여기에_내용을_입력하세요...']
+                                    "
                                     onInput={handleContentChange}
+                                    aria-placeholder="내용을 입력해주세요."
                                 />
                             </div>
                         </div>
