@@ -10,7 +10,7 @@ import {
     SelectValue,
 } from '@/components/common/Select/Select';
 import { useErrorToast, useSuccessToast } from '@/hooks';
-import { createDataFromClient } from '@/services';
+import { checkDuplicateData, createMultipleDataFromClient } from '@/services';
 import axios from 'axios';
 import { MoveRight } from 'lucide-react';
 import React, { useState } from 'react';
@@ -146,7 +146,22 @@ function NewsletterCollect() {
                     description: cleanText(item.description),
                 }));
 
-                await createDataFromClient('pre_news_items', preData);
+                const nonDuplicateData = (
+                    await Promise.all(
+                        preData.map(async (item: RawPreNewsItem) => {
+                            const isDuplicate = await checkDuplicateData(
+                                'pre_news_items',
+                                'originallink',
+                                item.originallink,
+                            );
+                            return isDuplicate ? null : item;
+                        }),
+                    )
+                ).filter((item): item is RawPreNewsItem => item !== null);
+
+                if (nonDuplicateData.length > 0) {
+                    await createMultipleDataFromClient('pre_news_items', nonDuplicateData);
+                }
                 successToast({
                     title: '네이버 뉴스 API 호출 성공',
                     description: '네이버 뉴스 API 데이터가 1차 DB에 저장되었습니다.',

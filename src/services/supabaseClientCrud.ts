@@ -22,9 +22,17 @@ export const fetchDataByIdFromClient = async <T extends TableName>(
 
 export const createDataFromClient = async <T extends TableName>(
     table: T,
-    payload: TablesInsert<T> | TablesInsert<T>[], // 단일 객체 또는 배열 지원
-): Promise<TablesInsert<T> | TablesInsert<T>[]> => {
-    const response = await axios.post<TablesInsert<T> | TablesInsert<T>[]>(
+    payload: TablesInsert<T>,
+): Promise<TablesInsert<T>> => {
+    const response = await axios.post<TablesInsert<T>>(SUPABASE_ENDPOINT.BY_TABLE(table), payload);
+    return response.data;
+};
+
+export const createMultipleDataFromClient = async <T extends TableName>(
+    table: T,
+    payload: TablesInsert<T>[],
+): Promise<TablesInsert<T>[]> => {
+    const response = await axios.post<TablesInsert<T>[]>(
         SUPABASE_ENDPOINT.BY_TABLE(table),
         payload,
     );
@@ -50,4 +58,18 @@ export const deleteDataByIdFromClient = async <T extends TableName>(
     id: string,
 ): Promise<void> => {
     await axios.delete(SUPABASE_ENDPOINT.BY_TABLE_ID_COLUMN(table, column, id));
+};
+
+export const checkDuplicateData = async <T extends TableName>(
+    table: T,
+    column: TableColumn<T>,
+    value: string,
+): Promise<boolean> => {
+    const query = SUPABASE_ENDPOINT.BY_TABLE_ID_COLUMN(
+        table,
+        column,
+        encodeURIComponent(encodeURIComponent(value)),
+    );
+    const response = await axios.get(query);
+    return response.data.length > 0;
 };
