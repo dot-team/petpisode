@@ -1,24 +1,30 @@
 'use client';
 
 import { Button, Input } from '@/components/common';
-// import Image from 'next/image';
 import React, { useRef, useState } from 'react';
 import { BookImage, CircleX } from 'lucide-react';
-
 import supabaseClient from '@/lib/supabase/client';
+import { communityPost } from '@/apis/post';
 
 function PostFormCard() {
     const fileRef = useRef<HTMLInputElement | null>(null);
     const [title, setTitle] = useState<string>('');
-    const [, setContent] = useState<string>('');
+    const [content, setContent] = useState<string>('');
     const [preview, setPreview] = useState<string | null>(null);
-    // const [getPublicUrl, setGetPublicUrl] = useState<string | null>(null);
     const [fileData, setFileData] = useState<File | null>(null);
+    const [getPublicUrl, setGetPublicUrl] = useState<string | null>(null);
     const BUCKET_STORAGE = process.env.NEXT_PUBLIC_STORAGE_BUCKET;
 
-    // const {data} = useMutation({
-    //     mutationFn:
-    // })
+    const createPost = async (imgUrl: string | null, valueContent: string, valueTitle: string) => {
+        const data = await communityPost(imgUrl ?? '', valueContent, valueTitle);
+
+        if (data) {
+            setContent('');
+            setPreview(null);
+            setTitle('');
+        }
+    };
+
     const handleImageClick = () => {
         fileRef.current?.click();
     };
@@ -27,13 +33,14 @@ function PostFormCard() {
     };
 
     async function uploadFile(formData: File) {
-        const { error } = await supabaseClient.storage
+        const { data, error } = await supabaseClient.storage
             .from(BUCKET_STORAGE as string)
             .upload(`posts/${formData.name}`, formData);
-        // const publicUrl = supabaseClient.storage
-        //     .from(BUCKET_STORAGE as string)
-        //     .getPublicUrl(`${data!.path}`);
-        // setGetPublicUrl(publicUrl.data.publicUrl);
+        const publicUrl = supabaseClient.storage
+            .from(BUCKET_STORAGE as string)
+            .getPublicUrl(`${data!.path}`);
+        setGetPublicUrl(publicUrl.data.publicUrl);
+        await createPost(publicUrl.data.publicUrl, content, title);
         if (error) {
             console.log('파일이 업로드 되지 않았습니다.', error);
         }
@@ -63,6 +70,12 @@ function PostFormCard() {
     const handlePostClick = async () => {
         if (preview) {
             await uploadFile(fileData as File);
+        }
+        if (getPublicUrl === null || '') {
+            await createPost(getPublicUrl ?? '', content, title);
+            setContent('');
+            setPreview(null);
+            setTitle('');
         }
     };
 

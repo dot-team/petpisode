@@ -385,7 +385,7 @@ export type Database = {
                     content: string;
                     created_at: string;
                     deteled_at: string | null;
-                    img: string;
+                    img: string | null;
                     is_activated: boolean;
                     like: string;
                     post_id: string;
@@ -399,7 +399,7 @@ export type Database = {
                     content: string;
                     created_at?: string;
                     deteled_at?: string | null;
-                    img: string;
+                    img: string | null;
                     is_activated?: boolean;
                     like: string;
                     post_id?: string;
@@ -413,7 +413,7 @@ export type Database = {
                     content?: string;
                     created_at?: string;
                     deteled_at?: string | null;
-                    img?: string;
+                    img?: string | null;
                     is_activated?: boolean;
                     like?: string;
                     post_id?: string;
