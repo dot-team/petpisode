@@ -11,55 +11,14 @@ import {
 } from '@/components/common/Select/Select';
 import { useErrorToast, useSuccessToast } from '@/hooks';
 import useFetchOptions from '@/hooks/useFetchOptions';
+import usePreNewsItem, { PreNewsItem } from '@/hooks/usePreNewsItem';
 import { checkDuplicateData, createMultipleDataFromClient } from '@/services';
 import axios from 'axios';
 import { MoveRight } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const leftHeader = ['제목', '게시일자'];
 const rightHeader = ['제목', '게시일자', '카테고리', '종'];
-const data = [
-    {
-        news_id: '5bee582a-a4c5-4f1a-b58e-5f2eb355c218',
-        title: 'React 소개',
-        link: 'https://naver.com',
-        date: '2025.02.07 12:30',
-        category: '건강',
-        species: '강아지',
-    },
-    {
-        news_id: '5bee582a-a4c5-4f1a-b58e-5f2eb355c219',
-        title: 'JavaScript 기본 문법',
-        link: 'https://example.com/img/js_syntax.jpg',
-        date: '2025.02.07 17:30',
-        category: '건강',
-        species: '고양이',
-    },
-    {
-        news_id: '5bee582a-a4c5-4f1a-b58e-5f2eb355c220',
-        title: 'Node.js 설치 방법',
-        link: 'https://example.com/img/nodejs_install.jpg',
-        date: '2025.02.08 12:30',
-        category: '훈련',
-        species: '강아지',
-    },
-    {
-        news_id: '5bee582a-a4c5-4f1a-b58e-5f2eb355c221',
-        title: '배포를 위한 Git과 GitHub 활용',
-        link: 'https://example.com/img/git_deployment.jpg',
-        date: '2025.02.08 14:30',
-        category: '이야기',
-        species: '고양이',
-    },
-    {
-        news_id: '5bee582a-a4c5-4f1a-b58e-5f2eb355c222',
-        title: '최신 웹 디자인 트렌드 2025',
-        link: 'https://example.com/img/web_design_2025.jpg',
-        date: '2025.02.09 12:30',
-        category: '입양',
-        species: '고양이',
-    },
-];
 
 interface RawPreNewsItem {
     description: string;
@@ -70,36 +29,39 @@ interface RawPreNewsItem {
 }
 
 function NewsletterCollect() {
-    const successToast = useSuccessToast;
-    const errorToast = useErrorToast;
-    const { categoryOptions, speciesOptions } = useFetchOptions();
-    const [availableData, setAvailableData] = useState(data);
-    const [selectedData, setSelectedData] = useState<{ [key: string]: string; news_id: string }[]>(
-        [],
-    );
-    const selectedIds = new Set(selectedData.map(item => item.news_id));
     const [searchWord, setSearchWord] = useState('');
     const [selectedSize, setSelectedSize] = useState(10);
     const [selectedSort, setSelectedSort] = useState('date');
+    const successToast = useSuccessToast;
+    const errorToast = useErrorToast;
+    const { categoryOptions, speciesOptions } = useFetchOptions();
+    const [availableData, setAvailableData] = useState<PreNewsItem[]>([]);
+    const [selectedData, setSelectedData] = useState<PreNewsItem[]>([]);
+    const selectedIds = new Set(selectedData.map(item => item.pre_news_id));
+
+    const availablePreNews = usePreNewsItem();
+    useEffect(() => {
+        setAvailableData(availablePreNews);
+    }, [availablePreNews]);
 
     const handleCheckboxChange = (news_id: string, isChecked: boolean) => {
         if (isChecked) {
-            const selectedItem = availableData.find(item => item.news_id === news_id);
+            const selectedItem = availableData.find(item => item.pre_news_id === news_id);
             if (selectedItem) {
-                setAvailableData(prev => prev.filter(item => item.news_id !== news_id));
+                setAvailableData(prev => prev.filter(item => item.pre_news_id !== news_id));
                 setSelectedData(prev =>
                     [...prev, selectedItem].sort(
-                        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+                        (a, b) => new Date(a.pubDate).getTime() - new Date(b.pubDate).getTime(),
                     ),
                 );
             }
         } else {
-            const deselectedItem = selectedData.find(item => item.news_id === news_id);
+            const deselectedItem = selectedData.find(item => item.pre_news_id === news_id);
             if (deselectedItem) {
-                setSelectedData(prev => prev.filter(item => item.news_id !== news_id));
+                setSelectedData(prev => prev.filter(item => item.pre_news_id !== news_id));
                 setAvailableData(prev =>
                     [...prev, deselectedItem as (typeof availableData)[number]].sort(
-                        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+                        (a, b) => new Date(a.pubDate).getTime() - new Date(b.pubDate).getTime(),
                     ),
                 );
             }
@@ -236,7 +198,7 @@ function NewsletterCollect() {
                             <Label htmlFor="category" className="flex items-center">
                                 카테고리
                             </Label>
-                            <Select defaultValue="health">
+                            <Select defaultValue="all">
                                 <SelectTrigger
                                     id="category"
                                     variant="admin"
@@ -245,6 +207,9 @@ function NewsletterCollect() {
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
+                                    <SelectItem key="all" value="all">
+                                        전체
+                                    </SelectItem>
                                     {categoryOptions.map(category => (
                                         <SelectItem key={category.value} value={category.value}>
                                             {category.label}
@@ -257,7 +222,7 @@ function NewsletterCollect() {
                             <Label htmlFor="species" className="flex items-center">
                                 종
                             </Label>
-                            <Select defaultValue="dog">
+                            <Select defaultValue="all">
                                 <SelectTrigger
                                     id="species"
                                     variant="admin"
@@ -266,6 +231,9 @@ function NewsletterCollect() {
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
+                                    <SelectItem key="all" value="all">
+                                        전체
+                                    </SelectItem>
                                     {speciesOptions.map(species => (
                                         <SelectItem key={species.value} value={species.value}>
                                             {species.label}
