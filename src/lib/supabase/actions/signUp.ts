@@ -27,8 +27,10 @@ const signupWithEmailPassword = async (formData: SignupFormType): Promise<Signup
                 data: {
                     nickname: formData.nickname,
                     news_subscribe: formData.agreeEmailNews || formData.agreeWebPushNews,
-                    news_subscribe_type: newsSubscribeType.join('|'),
+                    news_subscribe_type: newsSubscribeType.join('|') || null,
                     provider: 'email',
+                    role: 'user',
+                    profile_image_url: null,
                 },
             },
         });

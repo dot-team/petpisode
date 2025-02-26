@@ -1,9 +1,9 @@
-import { EmailLogin, SocialLogin } from '@/components/auth';
+import { SignInContainer } from '@/components/auth';
 
 async function LoginPage({ searchParams }: { searchParams: { method?: string } }) {
     const { method } = await searchParams;
 
-    return method === 'email' ? <EmailLogin /> : <SocialLogin />;
+    return <SignInContainer method={method} />;
 }
 
 export default LoginPage;

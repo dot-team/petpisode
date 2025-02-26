@@ -1,16 +1,16 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import type { User } from '@/types';
+import type { UserInfo } from '@/types';
 
 interface UserState {
-    user: User | null;
+    user: UserInfo | null;
     isUserLoading: boolean;
 }
 
 interface UserActions {
     actions: {
-        setUser: (user: Partial<User> | null) => void;
+        setUser: (user: Partial<UserInfo> | null) => void;
         clearUser: () => void;
         setUserLoading: (isUserLoading: boolean) => void;
     };
@@ -44,14 +44,15 @@ export const useUserStore = create<UserStore>()(
                                 } else {
                                     state.user = state.user
                                         ? { ...state.user, ...userData }
-                                        : (userData as User);
+                                        : (userData as UserInfo);
                                 }
                             },
                             false,
                             USER_ACTION_NAME.SET_USER,
                         ),
                     clearUser: () => set(initialState, false, USER_ACTION_NAME.CLEAR_USER),
-                    setUserLoading: isUserLoading => set({ isUserLoading }, false),
+                    setUserLoading: isUserLoading =>
+                        set({ isUserLoading }, false, USER_ACTION_NAME.SET_LOADING),
                 },
             })),
             {
@@ -60,9 +61,9 @@ export const useUserStore = create<UserStore>()(
                     user: state.user
                         ? {
                               email: state.user.email,
-                              name: state.user.nickname,
-                              description: state.user.role,
-                              imgUrl: state.user.profile_image_url,
+                              nickname: state.user.nickname,
+                              role: state.user.role,
+                              profile_image_url: state.user.profile_image_url,
                           }
                         : null,
                 }),
