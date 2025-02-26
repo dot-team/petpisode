@@ -11,22 +11,14 @@ import {
 } from '@/components/common/Select/Select';
 import { useErrorToast, useSuccessToast } from '@/hooks';
 import useFetchOptions from '@/hooks/useFetchOptions';
+import { fetchPreNewsData } from '@/hooks/usePreNewsData';
 import usePreNewsItem, { PreNewsItem } from '@/hooks/usePreNewsItem';
-import { checkDuplicateData, createMultipleDataFromClient } from '@/services';
-import axios from 'axios';
+import { createMultipleDataFromClient } from '@/services';
 import { MoveRight } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
 const leftHeader = ['제목', '게시일자'];
 const rightHeader = ['제목', '게시일자', '카테고리', '종'];
-
-interface RawPreNewsItem {
-    description: string;
-    link: string;
-    originallink: string;
-    pubDate: string;
-    title: string;
-}
 
 function NewsletterCollect() {
     const [searchWord, setSearchWord] = useState('');
@@ -68,71 +60,40 @@ function NewsletterCollect() {
         }
     };
 
-    const cleanText = (str: string) => {
-        // 1. <b> 태그 제거
-        const withoutBoldTags = str.replace(/<b>/g, '').replace(/<\/b>/g, '');
-
-        // 2. HTML 엔티티 변환
-        const textarea = document.createElement('textarea');
-        textarea.innerHTML = withoutBoldTags;
-        return textarea.value;
-    };
-
-    const onClickAPIRequestBtn = () => {
-        const fetchNews = async () => {
-            try {
-                const response = await axios.get(`/api/naver-news`, {
-                    params: {
-                        query: searchWord,
-                        sort: 'sim',
-                        display: selectedSize,
-                    },
-                });
-                const preData = response.data.items.map((item: RawPreNewsItem) => ({
-                    ...item,
-                    title: cleanText(item.title),
-                    description: cleanText(item.description),
-                }));
-
-                const nonDuplicateData = (
-                    await Promise.all(
-                        preData.map(async (item: RawPreNewsItem) => {
-                            const isDuplicate = await checkDuplicateData(
-                                'pre_news_items',
-                                'originallink',
-                                item.originallink,
-                            );
-                            return isDuplicate ? null : item;
-                        }),
-                    )
-                ).filter((item): item is RawPreNewsItem => item !== null);
-
-                if (nonDuplicateData.length > 0) {
-                    await createMultipleDataFromClient('pre_news_items', nonDuplicateData);
-                }
-                successToast({
-                    title: '네이버 뉴스 API 호출 성공',
-                    description: '네이버 뉴스 API 데이터가 1차 DB에 저장되었습니다.',
-                });
-                return preData;
-            } catch (error) {
-                errorToast({
-                    title: '네이버 뉴스 API 호출 실패',
-                    description: '네이버 뉴스 API 호출 또는 1차 DB에의 저장이 실패했습니다.',
-                });
-                console.error('❌ 뉴스 데이터 요청 실패:', error);
-                return null;
-            }
-        };
+    const onClickAPIRequestBtn = async () => {
         if (!selectedSize || searchWord === '' || !selectedSort) {
             errorToast({
                 title: '네이버 뉴스 API 호출 실패',
                 description: '검색 내용을 입력해주세요.',
             });
-        } else {
-            fetchNews();
+            return;
+        }
+
+        try {
+            const data = await fetchPreNewsData(
+                searchWord,
+                selectedSize,
+                selectedSort,
+                categoryOptions,
+                speciesOptions,
+            );
+
+            console.log(data);
+            await createMultipleDataFromClient('pre_news_items', data);
+
+            successToast({
+                title: '네이버 뉴스 API 호출 성공',
+                description: '네이버 뉴스 API 데이터가 1차 DB에 저장되었습니다.',
+            });
+        } catch (error) {
+            errorToast({
+                title: '네이버 뉴스 API 호출 실패',
+                description: '네이버 뉴스 API 호출 또는 1차 DB에의 저장이 실패했습니다.',
+            });
+            console.error('❌ 뉴스 데이터 요청 실패:', error);
         }
     };
+
     const onClickSaveDBBtn = () => {};
     const onClickClearSheetBtn = () => {};
     return (
@@ -210,11 +171,16 @@ function NewsletterCollect() {
                                     <SelectItem key="all" value="all">
                                         전체
                                     </SelectItem>
-                                    {categoryOptions.map(category => (
-                                        <SelectItem key={category.value} value={category.value}>
-                                            {category.label}
-                                        </SelectItem>
-                                    ))}
+                                    {Object.entries(categoryOptions.categoryMap).map(
+                                        ([categoryId, categoryDescription]) => (
+                                            <SelectItem
+                                                key={categoryId}
+                                                value={categoryDescription}
+                                            >
+                                                {categoryDescription}
+                                            </SelectItem>
+                                        ),
+                                    )}
                                 </SelectContent>
                             </Select>
                         </div>
@@ -234,11 +200,13 @@ function NewsletterCollect() {
                                     <SelectItem key="all" value="all">
                                         전체
                                     </SelectItem>
-                                    {speciesOptions.map(species => (
-                                        <SelectItem key={species.value} value={species.value}>
-                                            {species.label}
-                                        </SelectItem>
-                                    ))}
+                                    {Object.entries(speciesOptions.speciesMap).map(
+                                        ([speciesId, speciesDescription]) => (
+                                            <SelectItem key={speciesId} value={speciesDescription}>
+                                                {speciesDescription}
+                                            </SelectItem>
+                                        ),
+                                    )}
                                 </SelectContent>
                             </Select>
                         </div>

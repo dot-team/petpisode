@@ -9,6 +9,8 @@ export interface PreNewsItem {
     pubDate: string;
     title: string;
     created_at: string;
+    category: string;
+    species: string;
 }
 
 const usePreNewsItem = () => {

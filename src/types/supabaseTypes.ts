@@ -309,6 +309,8 @@ export type Database = {
                     pubDate: string;
                     title: string;
                     created_at: string;
+                    category: string;
+                    species: string;
                 };
                 Insert: {
                     pre_news_id?: string;
@@ -318,6 +320,8 @@ export type Database = {
                     pubDate?: string;
                     title?: string;
                     created_at?: string;
+                    category?: string;
+                    species?: string;
                 };
                 Update: {
                     pre_news_id?: string;
@@ -327,6 +331,8 @@ export type Database = {
                     pubDate?: string;
                     title?: string;
                     created_at?: string;
+                    category?: string;
+                    species?: string;
                 };
                 Relationships: [];
             };
@@ -402,32 +408,61 @@ export type Database = {
                     },
                 ];
             };
-            news_keywords: {
+            category_keywords: {
                 Row: {
                     category_id: string;
                     created_at: string;
-                    keyword_id: string;
+                    category_keyword_id: string;
                     keyword_name: string;
                 };
                 Insert: {
                     category_id?: string;
                     created_at?: string;
-                    keyword_id?: string;
+                    category_keyword_id?: string;
                     keyword_name: string;
                 };
                 Update: {
                     category_id?: string;
                     created_at?: string;
-                    keyword_id?: string;
+                    category_keyword_id?: string;
                     keyword_name?: string;
                 };
                 Relationships: [
                     {
-                        foreignKeyName: 'news_keyword_category_id_fkey';
+                        foreignKeyName: 'category_keyword_category_id_fkey';
                         columns: ['category_id'];
                         isOneToOne: false;
                         referencedRelation: 'news_categories';
                         referencedColumns: ['category_id'];
+                    },
+                ];
+            };
+            species_keywords: {
+                Row: {
+                    species_id: string;
+                    created_at: string;
+                    species_keyword_id: string;
+                    keyword_name: string;
+                };
+                Insert: {
+                    species_id?: string;
+                    created_at?: string;
+                    species_keyword_id?: string;
+                    keyword_name: string;
+                };
+                Update: {
+                    speciesy_id?: string;
+                    created_at?: string;
+                    species_keyword_id?: string;
+                    keyword_name?: string;
+                };
+                Relationships: [
+                    {
+                        foreignKeyName: 'species_keyword_species_id_fkey';
+                        columns: ['species_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'news_species';
+                        referencedColumns: ['species_id'];
                     },
                 ];
             };

@@ -95,7 +95,10 @@ function AdminNewletterCollectTable({
                                         cellContent = formattedDate;
                                         titleContent = formattedDate;
                                     } else {
-                                        cellContent = String(row[typedKey]);
+                                        cellContent =
+                                            String(row[typedKey]) !== 'null'
+                                                ? String(row[typedKey])
+                                                : '-';
                                         titleContent = cellContent;
                                     }
                                     return (
