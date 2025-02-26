@@ -255,12 +255,33 @@ export type Database = {
                     },
                 ];
             };
+            news_species: {
+                Row: {
+                    species_id: string;
+                    species: string;
+                    created_at: string;
+                    description: string;
+                };
+                Insert: {
+                    species_id?: string;
+                    species?: string;
+                    created_at?: string;
+                    description: string;
+                };
+                Update: {
+                    species_id?: string;
+                    species?: string;
+                    created_at?: string;
+                    description?: string;
+                };
+                Relationships: [];
+            };
             news_categories: {
                 Row: {
                     category: string;
                     category_id: string;
                     created_at: string;
-                    description: string | null;
+                    description: string;
                     updated_at: string | null;
                 };
                 Insert: {

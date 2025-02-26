@@ -10,6 +10,7 @@ import {
     SelectValue,
 } from '@/components/common/Select/Select';
 import { useErrorToast, useSuccessToast } from '@/hooks';
+import useFetchOptions from '@/hooks/useFetchOptions';
 import { checkDuplicateData, createMultipleDataFromClient } from '@/services';
 import axios from 'axios';
 import { MoveRight } from 'lucide-react';
@@ -60,22 +61,6 @@ const data = [
     },
 ];
 
-const categoryOptions = [
-    { value: 'health', label: '건강' },
-    { value: 'training', label: '훈련' },
-    { value: 'care', label: '관리' },
-    { value: 'issue', label: '이슈' },
-    { value: 'story', label: '이야기' },
-    { value: 'activity', label: '활동' },
-    { value: 'adoption', label: '입양' },
-    { value: 'fun', label: '재미' },
-];
-
-const speciesOptions = [
-    { value: 'dog', label: '강아지' },
-    { value: 'cat', label: '고양이' },
-];
-
 interface RawPreNewsItem {
     description: string;
     link: string;
@@ -87,6 +72,7 @@ interface RawPreNewsItem {
 function NewsletterCollect() {
     const successToast = useSuccessToast;
     const errorToast = useErrorToast;
+    const { categoryOptions, speciesOptions } = useFetchOptions();
     const [availableData, setAvailableData] = useState(data);
     const [selectedData, setSelectedData] = useState<{ [key: string]: string; news_id: string }[]>(
         [],
