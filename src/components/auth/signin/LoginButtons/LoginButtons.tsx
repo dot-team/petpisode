@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/components';
 import { URL } from '@/constants';
+import { signInWithGoogle } from '@/lib/supabase/actions';
 
 function LoginButtons() {
     return (
@@ -9,12 +10,15 @@ function LoginButtons() {
                 카카오로 로그인
             </Button>
 
-            <Button
-                className="w-full bg-dot-white hover:bg-dot-white text-dot-black border"
-                size="lg"
-            >
-                Google로 로그인
-            </Button>
+            <form>
+                <Button
+                    formAction={signInWithGoogle}
+                    className="w-full bg-dot-white hover:bg-dot-white text-dot-black border"
+                    size="lg"
+                >
+                    Google로 로그인
+                </Button>
+            </form>
 
             <Button
                 className="w-full bg-dot-white hover:bg-dot-white text-dot-black border"
