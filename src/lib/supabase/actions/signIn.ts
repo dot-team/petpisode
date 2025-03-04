@@ -101,6 +101,7 @@ const signInWith = (provider: Provider) => async () => {
 };
 
 const signInWithGoogle = signInWith('google');
+const signInWithKakao = signInWith('kakao');
 
 const signOut = async () => {
     const supabase = await createClientForServer();
@@ -108,4 +109,4 @@ const signOut = async () => {
     revalidatePath('/');
 };
 
-export { signinWithEmailPassword, signInWithGoogle, signOut };
+export { signinWithEmailPassword, signInWithKakao, signInWithGoogle, signOut };
