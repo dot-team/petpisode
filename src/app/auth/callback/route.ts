@@ -3,6 +3,7 @@ import createClientForServer from '@/lib/supabase/server';
 import { fetchDataByIdFromServer } from '@/services';
 import { TableData } from '@/types';
 import { deleteAuthUser, insertUserData } from '@/lib/supabase/actions/signUp';
+import { ADMIN_PAGE, MEMBER_ROLE } from '@/constants';
 
 export async function GET(request: NextRequest) {
     const { searchParams, origin } = new URL(request.url);
@@ -39,7 +40,7 @@ export async function GET(request: NextRequest) {
                         provider: user.app_metadata?.provider || 'oauth',
                         news_subscribe: false, // 기본값 설정
                         news_subscribe_type: null,
-                        role: 'user',
+                        role: MEMBER_ROLE.USER,
                     };
 
                     try {
@@ -52,22 +53,25 @@ export async function GET(request: NextRequest) {
                         throw new Error('회원 정보 저장 중 오류가 발생했습니다.');
                     }
                 }
+
+                // admin 사용자라면 /admin 경로로 리다이렉트
+                const redirectPath =
+                    existingUser?.role === MEMBER_ROLE.ADMIN ? ADMIN_PAGE.DASHBOARD.link : next;
+                const forwardedHost = request.headers.get('x-forwarded-host');
+                const isLocalEnv = process.env.NODE_ENV === 'development';
+
+                if (isLocalEnv) {
+                    return NextResponse.redirect(`${origin}${redirectPath}`);
+                }
+
+                if (forwardedHost) {
+                    return NextResponse.redirect(`https://${forwardedHost}${redirectPath}`);
+                }
+
+                return NextResponse.redirect(`${origin}${redirectPath}`);
             } catch (userCheckError) {
                 console.error('Error checking existing user:', userCheckError);
             }
-
-            const forwardedHost = request.headers.get('x-forwarded-host');
-            const isLocalEnv = process.env.NODE_ENV === 'development';
-
-            if (isLocalEnv) {
-                return NextResponse.redirect(`${origin}${next}`);
-            }
-
-            if (forwardedHost) {
-                return NextResponse.redirect(`https://${forwardedHost}${next}`);
-            }
-
-            return NextResponse.redirect(`${origin}${next}`);
         }
     }
 
