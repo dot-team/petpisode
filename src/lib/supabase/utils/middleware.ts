@@ -1,7 +1,9 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import { match } from 'path-to-regexp';
+import { ADMIN_PAGE, MEMBER_ROLE, USER_PAGE } from '@/constants';
 import getSupabaseEnv from './getSupabaseEnv';
+import getUserRole from './getUserRole';
 
 export async function updateSession(request: NextRequest) {
     let supabaseResponse = NextResponse.next({
@@ -37,18 +39,35 @@ export async function updateSession(request: NextRequest) {
         data: { user },
     } = await supabase.auth.getUser();
 
-    const matchersForAuth = ['/admin{/*path}', '/userinfo{/*path}'];
+    const userRole = user?.id ? await getUserRole(user.id) : null;
+
+    const matchersForAuth = [`${USER_PAGE.MYPAGE.link}{/*path}`];
+    const matchersForAdmin = [`${ADMIN_PAGE.DASHBOARD.link}{/*path}`];
+    const matchersForAfterLogin = [
+        `${USER_PAGE.LOGIN.link}{/*path}`,
+        USER_PAGE.SIGNUP.link,
+        USER_PAGE.FINDPW.link,
+    ];
 
     // 경로 일치 확인!
-    const isMatch = (pathname: string, urls: string[]) => {
-        return urls.some(url => !!match(url)(pathname));
-    };
+    const isMatch = (pathname: string, urls: string[]) => urls.some(url => !!match(url)(pathname));
 
+    // 로그인하지 않았거나 role이 admin이 아닌 경우 어드민 차단
+    if (
+        (!user || userRole !== MEMBER_ROLE.ADMIN) &&
+        isMatch(request.nextUrl.pathname, matchersForAdmin)
+    ) {
+        return NextResponse.redirect(new URL(USER_PAGE.SIGNUP.link, request.url));
+    }
+
+    // 로그인하지 않고, 인증 필요 페이지 접속 차단
     if (!user && isMatch(request.nextUrl.pathname, matchersForAuth)) {
-        // no user, potentially respond by redirecting the user to the login page
-        const url = request.nextUrl.clone();
-        url.pathname = '/login';
-        return NextResponse.redirect(url);
+        return NextResponse.redirect(new URL(USER_PAGE.SIGNUP.link, request.url));
+    }
+
+    // 로그인 후 접속 불가능한 페이지 차단
+    if (user && isMatch(request.nextUrl.pathname, matchersForAfterLogin)) {
+        return NextResponse.redirect(new URL(USER_PAGE.HOME.link, request.url));
     }
 
     // IMPORTANT: You *must* return the supabaseResponse object as it is.
