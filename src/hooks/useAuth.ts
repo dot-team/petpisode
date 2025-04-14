@@ -4,7 +4,8 @@ import { useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUserActions, useUserStore } from '@/stores';
 import { signinWithEmailPassword, signOut } from '@/lib/supabase/actions/signIn';
-import { LoginFormState } from '@/types';
+import { ADMIN_PAGE, MEMBER_ROLE, USER_PAGE } from '@/constants';
+import type { LoginFormState } from '@/types';
 
 export function useAuth() {
     const router = useRouter();
@@ -23,7 +24,12 @@ export function useAuth() {
                 const result = await signinWithEmailPassword({}, formData);
 
                 if (result.success) {
-                    router.push('/');
+                    // 사용자 역할에 따라 다른 경로로 리다이렉트
+                    if (result.userRole === MEMBER_ROLE.ADMIN) {
+                        router.push(ADMIN_PAGE.DASHBOARD.link);
+                    } else {
+                        router.push(USER_PAGE.HOME.link);
+                    }
                     router.refresh();
                 }
 
@@ -46,7 +52,7 @@ export function useAuth() {
             setUserLoading(true);
             await signOut();
             clearUser();
-            router.push('/login');
+            router.push(USER_PAGE.LOGIN.link);
             router.refresh();
         } catch (error) {
             console.error('Sign out failed:', error);

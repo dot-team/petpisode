@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Button } from '@/components';
-import { URL } from '@/constants';
+import { USER_PAGE } from '@/constants';
 import { signInWithGoogle, signInWithKakao } from '@/lib/supabase/actions';
 import Image from 'next/image';
 import { Mail } from 'lucide-react';
@@ -35,9 +35,13 @@ function LoginButtons() {
             <Button
                 className="w-full bg-dot-white hover:bg-dot-white text-dot-black border"
                 size="lg"
+                asChild
             >
-                <Mail size={20} />
-                <Link href={`${URL.LOGIN.link}?method=email`}>이메일로 로그인</Link>
+                {/* <Mail size={20} />
+                <Link href={`${USER_PAGE.LOGIN.link}?method=email`}>이메일로 로그인</Link> */}
+                <Link href={`${USER_PAGE.LOGIN.link}?method=email`}>
+                    <Mail size={20} /> 이메일로 로그인
+                </Link>
             </Button>
         </div>
     );
