@@ -32,6 +32,18 @@ export const createDataFromServer = async <T extends TableName>(
     return response.data;
 };
 
+export const createMultipleDataFromServer = async <T extends TableName>(
+    table: T,
+    payload: TablesInsert<T>[],
+): Promise<TablesInsert<T>[]> => {
+    const response = await supabaseRest.post<TablesInsert<T>[]>(table, payload, {
+        headers: {
+            Prefer: 'return=representation',
+        },
+    });
+    return response.data;
+};
+
 export const updateDataByIdFromServer = async <T extends TableName>(
     table: T,
     column: TableColumn<T>,

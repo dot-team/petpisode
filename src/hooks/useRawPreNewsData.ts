@@ -1,14 +1,6 @@
 import axios from 'axios';
 import { checkDuplicateData } from '@/services';
-import { PreNewsItem } from './usePreNewsItem';
-
-interface RawPreNewsItem {
-    description: string;
-    link: string;
-    originallink: string;
-    pubDate: string;
-    title: string;
-}
+import { InsertPreNewsItem, RawPreNewsItem } from '@/types/preNewsData';
 
 const cleanText = (str: string) => {
     // 1. <b> 태그 제거
@@ -18,6 +10,10 @@ const cleanText = (str: string) => {
     const textarea = document.createElement('textarea');
     textarea.innerHTML = withoutBoldTags;
     return textarea.value;
+};
+
+const normalizeEmptyToNull = (value: string | undefined): string | null => {
+    return value && value.trim() !== '' ? value : null;
 };
 
 const determineCategoryAndSpecies = (
@@ -41,10 +37,15 @@ const determineCategoryAndSpecies = (
         keywords.some(keyword => title.includes(keyword) || description.includes(keyword)),
     );
 
-    const category = matchedCategory ? categoryOptions.categoryMap[matchedCategory[0]] || '' : '';
-    const species = matchedSpecies ? speciesOptions.speciesMap[matchedSpecies[0]] || '' : '';
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const category_id = matchedCategory ? matchedCategory[0] : '';
+    const category = category_id ? categoryOptions.categoryMap[category_id] || '' : '';
 
-    return { category, species };
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const species_id = matchedSpecies ? matchedSpecies[0] : '';
+    const species = species_id ? speciesOptions.speciesMap[species_id] || '' : '';
+
+    return { category, category_id, species, species_id };
 };
 
 export const fetchPreNewsData = async (
@@ -59,7 +60,7 @@ export const fetchPreNewsData = async (
         speciesKeywordMap: Record<string, string[]>;
         speciesMap: Record<string, string>;
     },
-): Promise<PreNewsItem[]> => {
+): Promise<InsertPreNewsItem[]> => {
     const response = await axios.get(`/api/naver-news`, {
         params: {
             query: searchWord,
@@ -84,7 +85,8 @@ export const fetchPreNewsData = async (
     ).filter((item): item is RawPreNewsItem => item !== null);
 
     return nonDuplicateData.map(item => {
-        const { category, species } = determineCategoryAndSpecies(
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        const { category, category_id, species, species_id } = determineCategoryAndSpecies(
             item.title,
             item.description,
             categoryOptions,
@@ -93,11 +95,14 @@ export const fetchPreNewsData = async (
 
         return {
             ...item,
+            pre_news_id: undefined,
             title: cleanText(item.title),
             description: cleanText(item.description),
-            category,
-            species,
-            pre_news_id: crypto.randomUUID(),
+            category: normalizeEmptyToNull(category),
+            category_id: normalizeEmptyToNull(category_id),
+            species: normalizeEmptyToNull(species),
+            species_id: normalizeEmptyToNull(species_id),
+            pubDate: new Date(item.pubDate).toISOString(),
             created_at: new Date().toISOString(),
         };
     });

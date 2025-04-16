@@ -309,19 +309,23 @@ export type Database = {
                     pubDate: string;
                     title: string;
                     created_at: string;
-                    category: string;
-                    species: string;
+                    category: string | null;
+                    category_id: string | null;
+                    species: string | null;
+                    species_id: string | null;
                 };
                 Insert: {
-                    pre_news_id?: string;
+                    pre_news_id?: string | null;
                     description?: string;
                     link?: string;
                     originallink?: string;
                     pubDate?: string;
                     title?: string;
                     created_at?: string;
-                    category?: string;
-                    species?: string;
+                    category?: string | null;
+                    category_id?: string | null;
+                    species?: string | null;
+                    species_id?: string | null;
                 };
                 Update: {
                     pre_news_id?: string;
@@ -331,17 +335,19 @@ export type Database = {
                     pubDate?: string;
                     title?: string;
                     created_at?: string;
-                    category?: string;
-                    species?: string;
+                    category?: string | null;
+                    category_id?: string | null;
+                    species?: string | null;
+                    species_id?: string | null;
                 };
                 Relationships: [];
             };
             news_items: {
                 Row: {
-                    category_id: string;
+                    category_id: string | null;
                     contents: string;
                     created_at: string;
-                    img_url: string;
+                    img_url: string | null;
                     is_published: boolean;
                     is_sended: boolean;
                     like: number;
@@ -349,17 +355,17 @@ export type Database = {
                     share: number;
                     source: string;
                     source_published_at: string;
-                    species: string;
+                    species_id: string | null;
                     summary: string;
                     title: string;
                     updated_at: string;
-                    user_id: string;
+                    user_id: string | null;
                 };
                 Insert: {
-                    category_id?: string;
+                    category_id?: string | null;
                     contents?: string;
                     created_at?: string;
-                    img_url?: string;
+                    img_url?: string | null;
                     is_published?: boolean;
                     is_sended?: boolean;
                     like?: number;
@@ -367,17 +373,17 @@ export type Database = {
                     share?: number;
                     source?: string;
                     source_published_at?: string;
-                    species?: string;
+                    species_id?: string | null;
                     summary?: string;
                     title?: string;
                     updated_at?: string;
-                    user_id?: string;
+                    user_id?: string | null;
                 };
                 Update: {
-                    category_id?: string;
+                    category_id?: string | null;
                     contents?: string;
                     created_at?: string;
-                    img_url?: string;
+                    img_url?: string | null;
                     is_published?: boolean;
                     is_sended?: boolean;
                     like?: number;
@@ -385,11 +391,11 @@ export type Database = {
                     share?: number;
                     source?: string;
                     source_published_at?: string;
-                    species?: string;
+                    species_id?: string | null;
                     summary?: string;
                     title?: string;
                     updated_at?: string;
-                    user_id?: string;
+                    user_id?: string | null;
                 };
                 Relationships: [
                     {
@@ -405,6 +411,27 @@ export type Database = {
                         isOneToOne: false;
                         referencedRelation: 'users';
                         referencedColumns: ['user_id'];
+                    },
+                    {
+                        foreignKeyName: 'news_items_species_id_fkey';
+                        columns: ['species_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'news_species';
+                        referencedColumns: ['species_id'];
+                    },
+                    {
+                        foreignKeyName: 'news_items_species_fkey';
+                        columns: ['species'];
+                        isOneToOne: false;
+                        referencedRelation: 'news_species';
+                        referencedColumns: ['description'];
+                    },
+                    {
+                        foreignKeyName: 'news_items_category_fkey';
+                        columns: ['category'];
+                        isOneToOne: false;
+                        referencedRelation: 'news_categories';
+                        referencedColumns: ['description'];
                     },
                 ];
             };

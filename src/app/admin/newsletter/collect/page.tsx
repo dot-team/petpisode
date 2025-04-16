@@ -11,11 +11,12 @@ import {
 } from '@/components/common/Select/Select';
 import { useErrorToast, useSuccessToast } from '@/hooks';
 import useFetchOptions from '@/hooks/useFetchOptions';
-import { fetchPreNewsData } from '@/hooks/usePreNewsData';
+import { fetchPreNewsData } from '@/hooks/useRawPreNewsData';
 import usePreNewsItem, { PreNewsItem } from '@/hooks/usePreNewsItem';
-import { createMultipleDataFromClient } from '@/services';
+import { createMultipleDataFromClient, createPreNewsItems } from '@/services';
 import { MoveRight } from 'lucide-react';
 import React, { useEffect, useMemo, useState } from 'react';
+import { createNewsItems } from './transformData';
 
 const leftHeader = ['제목', '게시일자'];
 const rightHeader = ['제목', '게시일자', '카테고리', '종'];
@@ -80,8 +81,8 @@ function NewsletterCollect() {
                 speciesOptions,
             );
 
-            console.log(data);
             await createMultipleDataFromClient('pre_news_items', data);
+            createPreNewsItems(data);
 
             successToast({
                 title: '네이버 뉴스 API 호출 성공',
@@ -104,11 +105,23 @@ function NewsletterCollect() {
         });
     }, [availableData, selectedCategory, selectedSpecies]);
 
-    const onClickSaveDBBtn = () => {};
+    const onClickSaveDBBtn = async () => {
+        try {
+            await createNewsItems(selectedData);
+            setSelectedData([]);
+        } catch (error) {
+            errorToast({
+                title: '❌ 뉴스 데이터 저장 실패',
+                description: '뉴스 데이터의 2차 DB 저장 중 오류가 발생했습니다.',
+            });
+            console.error('❌ 뉴스 데이터 요청 실패:', error);
+        }
+    };
+
     const onClickClearSheetBtn = () => {};
     return (
-        <div className="w-4/5 mx-auto">
-            <div id="apiRequestSearchBar" className="flex items-center gap-3 my-4">
+        <div className="w-4/5 mx-auto flex flex-col justify-center">
+            <div id="apiRequestSearchBar" className="flex justify-center items-center gap-3 my-6">
                 <div className="flex gap-4 bg-zinc-200 py-3 px-5">
                     <div className="flex gap-1">
                         <Label htmlFor="searchWord" className="flex items-center">
@@ -136,6 +149,7 @@ function NewsletterCollect() {
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
+                                <SelectItem value="1">1</SelectItem>
                                 <SelectItem value="10">10</SelectItem>
                                 <SelectItem value="50">50</SelectItem>
                                 <SelectItem value="100">100</SelectItem>
@@ -162,7 +176,7 @@ function NewsletterCollect() {
                 </Button>
             </div>
 
-            <div id="contentWrap" className="flex gap-5">
+            <div id="contentWrap" className="flex gap-4 justify-between">
                 <div id="beforeSelected" className="w-2/5">
                     <div id="apiRequestSearchBar" className="flex items-center gap-4">
                         <div className="flex gap-2">
@@ -237,13 +251,13 @@ function NewsletterCollect() {
                     />
                 </div>
                 <MoveRight className="mt-40" />
-                <div id="afterSelected" className="w-2/5">
+                <div id="afterSelected" className="w-3/5">
                     <div id="btnWrap" className="flex gap-4 justify-end">
                         <Button onClick={onClickSaveDBBtn} variant="admin" className="">
                             DB에 저장
                         </Button>
                         <Button onClick={onClickClearSheetBtn} variant="admin" className="">
-                            스프레드시트 초기화
+                            1차 데이터 초기화
                         </Button>
                     </div>
 

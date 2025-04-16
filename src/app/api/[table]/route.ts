@@ -1,5 +1,9 @@
 import { NextResponse } from 'next/server';
-import { createDataFromServer, fetchAllDataFromServer } from '@/services/supabaseServerCrud';
+import {
+    createDataFromServer,
+    createMultipleDataFromServer,
+    fetchAllDataFromServer,
+} from '@/services/supabaseServerCrud';
 import { TableName } from '@/types/supabaseCrudTypes';
 
 export async function GET(_request: Request, { params }: { params: { table: TableName } }) {
@@ -19,7 +23,12 @@ export async function POST(request: Request, { params }: { params: { table: Tabl
     const payload = await request.json();
 
     try {
-        const data = await createDataFromServer(table, payload);
+        let data;
+        if (payload.length > 1) {
+            data = await createMultipleDataFromServer(table, payload);
+        } else {
+            data = await createDataFromServer(table, payload);
+        }
 
         return NextResponse.json(data);
     } catch (error) {

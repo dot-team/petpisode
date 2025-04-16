@@ -14,7 +14,7 @@ interface TableProps {
     data: PreNewsItem[];
     side: 'left' | 'right';
     onCheckboxChange: (news_id: string, isChecked: boolean) => void;
-    selectedIds: Set<string>;
+    selectedIds: Set<string | null>;
 }
 
 function AdminNewletterCollectTable({
@@ -39,7 +39,7 @@ function AdminNewletterCollectTable({
 
     return (
         <>
-            <div className="w-full mt-4">
+            <div className="w-full mt-2">
                 <Table className="w-full table-fixed">
                     <TableHeader className="sticky top-0 bg-white shadow-sm">
                         <TableRow>
@@ -65,7 +65,10 @@ function AdminNewletterCollectTable({
                                         type="checkbox"
                                         checked={selectedIds.has(row.pre_news_id)}
                                         onChange={e =>
-                                            onCheckboxChange(row.pre_news_id, e.target.checked)
+                                            onCheckboxChange(
+                                                row.pre_news_id || '',
+                                                e.target.checked,
+                                            )
                                         }
                                     />
                                 </TableCell>
@@ -91,7 +94,9 @@ function AdminNewletterCollectTable({
                                         );
                                         titleContent = String(row[typedKey]);
                                     } else if (key === 'pubDate') {
-                                        const formattedDate = formatDate(row[typedKey]);
+                                        const formattedDate = formatDate(
+                                            row[typedKey] || String(new Date()),
+                                        );
                                         cellContent = formattedDate;
                                         titleContent = formattedDate;
                                     } else {
