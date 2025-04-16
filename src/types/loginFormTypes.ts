@@ -5,4 +5,5 @@ export type LoginFormState = {
         general?: string[];
     };
     success?: boolean;
+    userRole?: string;
 };

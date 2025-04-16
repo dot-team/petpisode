@@ -1,14 +1,4 @@
-import {
-    LayoutDashboard,
-    User,
-    Newspaper,
-    BookOpen,
-    Speech,
-    TriangleAlert,
-    Settings,
-    ChevronDown,
-    ChevronRight,
-} from 'lucide-react';
+import { ChevronDown, ChevronRight } from 'lucide-react';
 import {
     Collapsible,
     CollapsibleTrigger,
@@ -25,50 +15,7 @@ import {
     SidebarMenuSubButton,
     SidebarMenuButton,
 } from '@/components/layout';
-
-// Menu items.
-const items = [
-    {
-        title: '대시보드',
-        url: '#',
-        icon: LayoutDashboard,
-    },
-    {
-        title: '회원',
-        url: '#',
-        icon: User,
-    },
-    {
-        title: '뉴스레터',
-        url: '/admin/newsletter',
-        icon: Newspaper,
-        subItems: [
-            { title: '목록', url: '/newsletter' },
-            { title: '수집', url: '/admin/newsletter/collect' },
-            { title: '게시 및 발송', url: '#' },
-        ],
-    },
-    {
-        title: '사연 제보',
-        url: '#',
-        icon: BookOpen,
-    },
-    {
-        title: '커뮤니티',
-        url: '#',
-        icon: Speech,
-    },
-    {
-        title: '신고',
-        url: '#',
-        icon: TriangleAlert,
-    },
-    {
-        title: '설정',
-        url: '#',
-        icon: Settings,
-    },
-];
+import { ADMIN_NAV_LIST } from '@/constants';
 
 export default function AdminSidebar() {
     return (
@@ -78,18 +25,18 @@ export default function AdminSidebar() {
                 <SidebarGroup>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            {items.map(item => (
+                            {ADMIN_NAV_LIST.map(item => (
                                 <Collapsible
-                                    key={item.title}
-                                    defaultOpen={item.title === '뉴스레터'}
+                                    key={item.text}
+                                    defaultOpen={item.text === '뉴스레터'}
                                     className="group/collapsible"
                                 >
                                     <SidebarMenuItem>
                                         <CollapsibleTrigger asChild>
                                             <SidebarMenuButton asChild>
-                                                <a href={item.url}>
-                                                    <item.icon />
-                                                    <span>{item.title}</span>
+                                                <a href={item.link}>
+                                                    {item.icon && <item.icon />}
+                                                    <span>{item.text}</span>
                                                     {item.subItems ? (
                                                         <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
                                                     ) : (
@@ -102,11 +49,11 @@ export default function AdminSidebar() {
                                             <CollapsibleContent>
                                                 <SidebarMenuSub>
                                                     {item.subItems.map(subItem => (
-                                                        <SidebarMenuSubItem key={subItem.title}>
+                                                        <SidebarMenuSubItem key={subItem.text}>
                                                             <SidebarMenuSubButton
-                                                                href={subItem.url}
+                                                                href={subItem.link}
                                                             >
-                                                                {subItem.title}
+                                                                {subItem.text}
                                                             </SidebarMenuSubButton>
                                                         </SidebarMenuSubItem>
                                                     ))}

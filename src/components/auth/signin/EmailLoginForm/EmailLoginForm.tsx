@@ -3,7 +3,7 @@
 import { FormEvent } from 'react';
 import Link from 'next/link';
 import { Input, Label } from '@/components';
-import { URL } from '@/constants';
+import { USER_PAGE } from '@/constants';
 import { useAuth, useErrorToast, useSuccessToast } from '@/hooks';
 import LoginSubmitButton from './LoginSubmitButton';
 
@@ -53,7 +53,7 @@ function EmailLoginForm() {
                         <div className="flex items-center justify-between">
                             <Label htmlFor="password">비밀번호</Label>
                             <Link
-                                href={URL.FINDPW.link}
+                                href={USER_PAGE.FINDPW.link}
                                 className="text-xs text-dot-gray-dark underline"
                             >
                                 비밀번호를 잊으셨나요?
@@ -74,7 +74,7 @@ function EmailLoginForm() {
 
             <div className="flex items-center gap-1 text-sm mt-3">
                 <span>계정이 없으신가요?</span>
-                <Link href={URL.SIGNUP.link} className="underline">
+                <Link href={USER_PAGE.SIGNUP.link} className="underline">
                     회원가입
                 </Link>
             </div>

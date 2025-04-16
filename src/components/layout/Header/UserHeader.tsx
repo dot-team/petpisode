@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Search } from 'lucide-react';
 import { Button, Input } from '@/components';
-import { NAV_ITEM, URL } from '@/constants';
+import { USER_PAGE, USER_NAV_LIST } from '@/constants';
 import { AuthButtons } from './AuthButtons';
 import Logo from '/public/images/logo.svg';
 
@@ -12,7 +12,7 @@ export function UserHeader() {
             <div className="container flex justify-between items-center h-16">
                 <div className="flex items-center gap-6 md:gap-8 lg:gap-10">
                     {/* Logo */}
-                    <Link href={URL.HOME.link}>
+                    <Link href={USER_PAGE.HOME.link}>
                         <Image
                             src={Logo}
                             alt="Petpisode"
@@ -27,7 +27,7 @@ export function UserHeader() {
                     {/* Main Navigation */}
                     <nav className="hidden md:inline-block">
                         <ul className="flex items-center gap-6">
-                            {NAV_ITEM.map(navItem => (
+                            {USER_NAV_LIST.map(navItem => (
                                 <li key={navItem.link}>
                                     <Link
                                         href={navItem.link}
