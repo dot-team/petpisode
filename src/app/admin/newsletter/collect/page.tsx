@@ -13,7 +13,11 @@ import { useErrorToast, useSuccessToast } from '@/hooks';
 import useFetchOptions from '@/hooks/useFetchOptions';
 import { fetchPreNewsData } from '@/hooks/useRawPreNewsData';
 import usePreNewsItem, { PreNewsItem } from '@/hooks/usePreNewsItem';
-import { createMultipleDataFromClient, createPreNewsItems } from '@/services';
+import {
+    createMultipleDataFromClient,
+    createPreNewsItems,
+    deleteAllDataFromClient,
+} from '@/services';
 import { MoveRight } from 'lucide-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { createNewsItems } from './transformData';
@@ -88,6 +92,10 @@ function NewsletterCollect() {
                 title: '네이버 뉴스 API 호출 성공',
                 description: '네이버 뉴스 API 데이터가 1차 DB에 저장되었습니다.',
             });
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
         } catch (error) {
             errorToast({
                 title: '네이버 뉴스 API 호출 실패',
@@ -118,7 +126,25 @@ function NewsletterCollect() {
         }
     };
 
-    const onClickClearSheetBtn = () => {};
+    const onClickClearPreDataBtn = async () => {
+        try {
+            await deleteAllDataFromClient('pre_news_items');
+
+            successToast({
+                title: '1차 DB 초기화 성공',
+                description: '1차 DB 데이터가 전부 삭제되었습니다.',
+            });
+
+            setAvailableData([]);
+            setSelectedData([]);
+        } catch (error) {
+            errorToast({
+                title: '1차 DB 초기화 실패',
+                description: '1차 DB 전체 삭제 중 오류가 발생했습니다.',
+            });
+        }
+    };
+
     return (
         <div className="w-4/5 mx-auto flex flex-col justify-center">
             <div id="apiRequestSearchBar" className="flex justify-center items-center gap-3 my-6">
@@ -256,7 +282,7 @@ function NewsletterCollect() {
                         <Button onClick={onClickSaveDBBtn} variant="admin" className="">
                             DB에 저장
                         </Button>
-                        <Button onClick={onClickClearSheetBtn} variant="admin" className="">
+                        <Button onClick={onClickClearPreDataBtn} variant="admin" className="">
                             1차 데이터 초기화
                         </Button>
                     </div>

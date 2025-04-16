@@ -114,3 +114,18 @@ export const checkDuplicateData = async <T extends TableName>(
     const response = await axios.get(query);
     return response.data.length > 0;
 };
+
+export const deleteAllDataFromClient = async <T extends TableName>(table: T): Promise<void> => {
+    try {
+        const response = await axios.delete(SUPABASE_ENDPOINT.BY_TABLE(table));
+
+        if (response.status === 204) {
+            console.log('전체 삭제 성공');
+        } else {
+            throw new Error('전체 삭제 처리 중 오류 발생');
+        }
+    } catch (error) {
+        console.error('전체 삭제 실패:', error);
+        throw error;
+    }
+};
