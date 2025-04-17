@@ -28,6 +28,26 @@ export const createDataFromClient = async <T extends TableName>(
     return response.data;
 };
 
+export const createMultipleDataFromClient = async <T extends TableName>(
+    table: T,
+    payload: TablesInsert<T>[],
+): Promise<TablesInsert<T>[]> => {
+    try {
+        const response = await axios.post<TablesInsert<T>[]>(
+            SUPABASE_ENDPOINT.BY_TABLE(table),
+            payload,
+        );
+        return response.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.error('전체 오류 객체:', error);
+        } else {
+            console.error('알 수 없는 오류:', error);
+        }
+        throw error;
+    }
+};
+
 export const updateDataByIdFromClient = async <T extends TableName>(
     table: T,
     column: TableColumn<T>,
@@ -46,5 +66,47 @@ export const deleteDataByIdFromClient = async <T extends TableName>(
     column: TableColumn<T>,
     id: string,
 ): Promise<void> => {
-    await axios.delete(SUPABASE_ENDPOINT.BY_TABLE_ID_COLUMN(table, column, id));
+    try {
+        const response = await axios.delete(
+            SUPABASE_ENDPOINT.BY_TABLE_ID_COLUMN(table, column, id),
+        );
+
+        if (response.status === 204) {
+            console.log('삭제 성공');
+        } else {
+            throw new Error('삭제 처리 중 오류 발생');
+        }
+    } catch (error) {
+        console.error('삭제 실패:', error);
+        throw error;
+    }
+};
+
+export const checkDuplicateData = async <T extends TableName>(
+    table: T,
+    column: TableColumn<T>,
+    value: string,
+): Promise<boolean> => {
+    const query = SUPABASE_ENDPOINT.BY_TABLE_ID_COLUMN(
+        table,
+        column,
+        encodeURIComponent(encodeURIComponent(value)),
+    );
+    const response = await axios.get(query);
+    return response.data.length > 0;
+};
+
+export const deleteAllDataFromClient = async <T extends TableName>(table: T): Promise<void> => {
+    try {
+        const response = await axios.delete(SUPABASE_ENDPOINT.BY_TABLE(table));
+
+        if (response.status === 204) {
+            console.log('전체 삭제 성공');
+        } else {
+            throw new Error('전체 삭제 처리 중 오류 발생');
+        }
+    } catch (error) {
+        console.error('전체 삭제 실패:', error);
+        throw error;
+    }
 };

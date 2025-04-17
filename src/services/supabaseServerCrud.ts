@@ -1,6 +1,7 @@
 import { SUPABASE_ENDPOINT } from '@/constants/endpoints';
 import { supabaseRest } from '@/lib';
 import { TableColumn, TableData, TableName, TablesInsert, TablesUpdate } from '@/types';
+import axios from 'axios';
 
 export const fetchAllDataFromServer = async <T extends TableName>(
     table: T,
@@ -32,6 +33,18 @@ export const createDataFromServer = async <T extends TableName>(
     return response.data;
 };
 
+export const createMultipleDataFromServer = async <T extends TableName>(
+    table: T,
+    payload: TablesInsert<T>[],
+): Promise<TablesInsert<T>[]> => {
+    const response = await supabaseRest.post<TablesInsert<T>[]>(table, payload, {
+        headers: {
+            Prefer: 'return=representation',
+        },
+    });
+    return response.data;
+};
+
 export const updateDataByIdFromServer = async <T extends TableName>(
     table: T,
     column: TableColumn<T>,
@@ -51,4 +64,25 @@ export const deleteDataByIdFromServer = async <T extends TableName>(
     id: string,
 ): Promise<void> => {
     await supabaseRest.delete(SUPABASE_ENDPOINT.BY_ID(table, column, id));
+};
+
+export const deleteAllDataFromServer = async <T extends TableName>(table: T): Promise<void> => {
+    try {
+        const response = await supabaseRest.delete(`${table}?pre_news_id=not.is.null`);
+
+        if (response.status === 204) {
+            console.log('전체 삭제 성공');
+        } else {
+            throw new Error('전체 삭제 처리 중 오류 발생');
+        }
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+            console.error('전체 삭제 실패:', error.response?.data || error.message);
+        } else if (error instanceof Error) {
+            console.error('전체 삭제 실패:', error.message);
+        } else {
+            console.error('전체 삭제 실패: 알 수 없는 에러 발생');
+        }
+        throw error;
+    }
 };

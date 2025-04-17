@@ -50,9 +50,8 @@ export async function DELETE(
     const column = searchParams.get('column') as TableColumn<typeof table>;
 
     try {
-        const data = await deleteDataByIdFromServer(table, column, id);
-
-        return NextResponse.json(data);
+        await deleteDataByIdFromServer(table, column, id);
+        return new NextResponse(null, { status: 204 });
     } catch (error) {
         return NextResponse.json({ error: (error as Error).message }, { status: 500 });
     }

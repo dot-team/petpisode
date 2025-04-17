@@ -6,14 +6,15 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/common/Table/Table';
+import { PreNewsItem } from '@/types/preNewsData';
 import React from 'react';
 
 interface TableProps {
     header: string[];
-    data: { [key: string]: string; news_id: string }[];
+    data: PreNewsItem[];
     side: 'left' | 'right';
     onCheckboxChange: (news_id: string, isChecked: boolean) => void;
-    selectedIds: Set<string>;
+    selectedIds: Set<string | null>;
 }
 
 function AdminNewletterCollectTable({
@@ -23,12 +24,22 @@ function AdminNewletterCollectTable({
     onCheckboxChange,
     selectedIds,
 }: TableProps) {
-    const columnsForBasicTable = ['title', 'date']; // 기존 테이블에서 사용할 컬럼
-    const columnsForExtendedTable = ['title', 'date', 'category', 'species'];
+    const columnsForBasicTable = ['title', 'pubDate']; // 기존 테이블에서 사용할 컬럼
+    const columnsForExtendedTable = ['title', 'pubDate', 'category', 'species'];
+    const formatDate = (isoString: string) => {
+        const date = new Date(isoString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // 월(0부터 시작) 보정
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+
+        return `${year}.${month}.${day}. ${hours}:${minutes}`;
+    };
 
     return (
         <>
-            <div className="w-full mt-4">
+            <div className="w-full mt-2">
                 <Table className="w-full table-fixed">
                     <TableHeader className="sticky top-0 bg-white shadow-sm">
                         <TableRow>
@@ -47,14 +58,17 @@ function AdminNewletterCollectTable({
                 <Table className="w-full table-fixed">
                     <TableBody>
                         {data.map(row => (
-                            <TableRow key={row.news_id}>
+                            <TableRow key={row.pre_news_id}>
                                 <TableCell className="text-center w-6">
                                     <input
-                                        key={row.news_id}
+                                        key={row.pre_news_id}
                                         type="checkbox"
-                                        checked={selectedIds.has(row.news_id)}
+                                        checked={selectedIds.has(row.pre_news_id)}
                                         onChange={e =>
-                                            onCheckboxChange(row.news_id, e.target.checked)
+                                            onCheckboxChange(
+                                                row.pre_news_id || '',
+                                                e.target.checked,
+                                            )
                                         }
                                     />
                                 </TableCell>
@@ -62,26 +76,46 @@ function AdminNewletterCollectTable({
                                 {(side === 'left'
                                     ? columnsForBasicTable
                                     : columnsForExtendedTable
-                                ).map((key, _) => (
-                                    <TableCell
-                                        key={row.news_id + key}
-                                        className="overflow-hidden text-ellipsis whitespace-nowrap"
-                                        title={row[key]}
-                                    >
-                                        {key === 'title' ? (
+                                ).map(key => {
+                                    const typedKey = key as keyof PreNewsItem;
+                                    let cellContent;
+                                    let titleContent;
+
+                                    if (key === 'title') {
+                                        cellContent = (
                                             <a
                                                 href={row.link}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="hover:underline"
                                             >
-                                                {row[key]}
+                                                {row[typedKey]}
                                             </a>
-                                        ) : (
-                                            row[key]
-                                        )}
-                                    </TableCell>
-                                ))}
+                                        );
+                                        titleContent = String(row[typedKey]);
+                                    } else if (key === 'pubDate') {
+                                        const formattedDate = formatDate(
+                                            row[typedKey] || String(new Date()),
+                                        );
+                                        cellContent = formattedDate;
+                                        titleContent = formattedDate;
+                                    } else {
+                                        cellContent =
+                                            String(row[typedKey]) !== 'null'
+                                                ? String(row[typedKey])
+                                                : '-';
+                                        titleContent = cellContent;
+                                    }
+                                    return (
+                                        <TableCell
+                                            key={row.pre_news_id + key}
+                                            className="overflow-hidden text-ellipsis whitespace-nowrap"
+                                            title={titleContent}
+                                        >
+                                            {cellContent}
+                                        </TableCell>
+                                    );
+                                })}
                             </TableRow>
                         ))}
                     </TableBody>

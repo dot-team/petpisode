@@ -9,226 +9,319 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/common/Select/Select';
-import { MoveRight } from 'lucide-react';
-import React, { useState } from 'react';
+import { useErrorToast, useSuccessToast } from '@/hooks';
+import useFetchOptions from '@/hooks/useFetchOptions';
+import usePreNewsItem from '@/hooks/usePreNewsItem';
+import { createMultipleDataFromClient, deleteAllDataFromClient } from '@/services';
+import { Loader2, MoveRight } from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { fetchPreNewsData } from '@/services/preNewsService';
+import { PreNewsItem } from '@/types/preNewsData';
+import { createNewsItems } from '@/services/transformNewsData';
 
 const leftHeader = ['제목', '게시일자'];
 const rightHeader = ['제목', '게시일자', '카테고리', '종'];
-const data = [
-    {
-        news_id: '5bee582a-a4c5-4f1a-b58e-5f2eb355c218',
-        title: 'React 소개',
-        link: 'https://naver.com',
-        date: '2025.02.07 12:30',
-        category: '건강',
-        species: '강아지',
-    },
-    {
-        news_id: '5bee582a-a4c5-4f1a-b58e-5f2eb355c219',
-        title: 'JavaScript 기본 문법',
-        link: 'https://example.com/img/js_syntax.jpg',
-        date: '2025.02.07 17:30',
-        category: '건강',
-        species: '고양이',
-    },
-    {
-        news_id: '5bee582a-a4c5-4f1a-b58e-5f2eb355c220',
-        title: 'Node.js 설치 방법',
-        link: 'https://example.com/img/nodejs_install.jpg',
-        date: '2025.02.08 12:30',
-        category: '훈련',
-        species: '강아지',
-    },
-    {
-        news_id: '5bee582a-a4c5-4f1a-b58e-5f2eb355c221',
-        title: '배포를 위한 Git과 GitHub 활용',
-        link: 'https://example.com/img/git_deployment.jpg',
-        date: '2025.02.08 14:30',
-        category: '이야기',
-        species: '고양이',
-    },
-    {
-        news_id: '5bee582a-a4c5-4f1a-b58e-5f2eb355c222',
-        title: '최신 웹 디자인 트렌드 2025',
-        link: 'https://example.com/img/web_design_2025.jpg',
-        date: '2025.02.09 12:30',
-        category: '입양',
-        species: '고양이',
-    },
-];
-
-const categoryOptions = [
-    { value: 'health', label: '건강' },
-    { value: 'training', label: '훈련' },
-    { value: 'care', label: '관리' },
-    { value: 'issue', label: '이슈' },
-    { value: 'story', label: '이야기' },
-    { value: 'activity', label: '활동' },
-    { value: 'adoption', label: '입양' },
-    { value: 'fun', label: '재미' },
-];
-
-const speciesOptions = [
-    { value: 'dog', label: '강아지' },
-    { value: 'cat', label: '고양이' },
-];
 
 function NewsletterCollect() {
-    const [availableData, setAvailableData] = useState(data);
-    const [selectedData, setSelectedData] = useState<{ [key: string]: string; news_id: string }[]>(
-        [],
-    );
-    const selectedIds = new Set(selectedData.map(item => item.news_id));
+    const [searchWord, setSearchWord] = useState('');
+    const [selectedSize, setSelectedSize] = useState(10);
+    const [selectedSort, setSelectedSort] = useState('date');
+    const [selectedCategory, setSelectedCategory] = useState('all');
+    const [selectedSpecies, setSelectedSpecies] = useState('all');
+    const successToast = useSuccessToast;
+    const errorToast = useErrorToast;
+    const { categoryOptions, speciesOptions } = useFetchOptions();
+    const [availableData, setAvailableData] = useState<PreNewsItem[]>([]);
+    const [selectedData, setSelectedData] = useState<PreNewsItem[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const selectedIds = new Set(selectedData.map(item => item.pre_news_id));
+
+    const availablePreNews = usePreNewsItem();
+
+    useEffect(() => {
+        setAvailableData(availablePreNews);
+        setIsLoading(false);
+    }, [availablePreNews]);
 
     const handleCheckboxChange = (news_id: string, isChecked: boolean) => {
         if (isChecked) {
-            const selectedItem = availableData.find(item => item.news_id === news_id);
+            const selectedItem = availableData.find(item => item.pre_news_id === news_id);
             if (selectedItem) {
-                setAvailableData(prev => prev.filter(item => item.news_id !== news_id));
+                setAvailableData(prev => prev.filter(item => item.pre_news_id !== news_id));
                 setSelectedData(prev =>
                     [...prev, selectedItem].sort(
-                        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+                        (a, b) => new Date(a.pubDate).getTime() - new Date(b.pubDate).getTime(),
                     ),
                 );
             }
         } else {
-            const deselectedItem = selectedData.find(item => item.news_id === news_id);
+            const deselectedItem = selectedData.find(item => item.pre_news_id === news_id);
             if (deselectedItem) {
-                setSelectedData(prev => prev.filter(item => item.news_id !== news_id));
+                setSelectedData(prev => prev.filter(item => item.pre_news_id !== news_id));
                 setAvailableData(prev =>
-                    [...prev, deselectedItem as (typeof availableData)[number]].sort(
-                        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+                    [...prev, deselectedItem].sort(
+                        (a, b) => new Date(a.pubDate).getTime() - new Date(b.pubDate).getTime(),
                     ),
                 );
             }
         }
     };
 
-    const onClickAPIRequestBtn = () => {};
-    const onClickSaveDBBtn = () => {};
-    const onClickClearSheetBtn = () => {};
+    const onClickAPIRequestBtn = async () => {
+        if (!selectedSize || searchWord === '' || !selectedSort) {
+            errorToast({
+                title: '네이버 뉴스 API 호출 실패',
+                description: '검색 내용을 입력해주세요.',
+            });
+            return;
+        }
+
+        try {
+            const data = await fetchPreNewsData(
+                searchWord,
+                selectedSize,
+                selectedSort,
+                categoryOptions,
+                speciesOptions,
+            );
+
+            await createMultipleDataFromClient('pre_news_items', data);
+
+            successToast({
+                title: '네이버 뉴스 API 호출 성공',
+                description: '네이버 뉴스 API 데이터가 1차 DB에 저장되었습니다.',
+            });
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        } catch (error) {
+            errorToast({
+                title: '네이버 뉴스 API 호출 실패',
+                description: '네이버 뉴스 API 호출 또는 1차 DB에의 저장이 실패했습니다.',
+            });
+            console.error('❌ 뉴스 데이터 요청 실패:', error);
+        }
+    };
+
+    const filteredData = useMemo(() => {
+        return availableData.filter(item => {
+            const categoryMatch = selectedCategory === 'all' || item.category === selectedCategory;
+            const speciesMatch = selectedSpecies === 'all' || item.species === selectedSpecies;
+            return categoryMatch && speciesMatch;
+        });
+    }, [availableData, selectedCategory, selectedSpecies]);
+
+    const onClickSaveDBBtn = async () => {
+        try {
+            await createNewsItems(selectedData);
+            setSelectedData([]);
+        } catch (error) {
+            errorToast({
+                title: '❌ 뉴스 데이터 저장 실패',
+                description: '뉴스 데이터의 2차 DB 저장 중 오류가 발생했습니다.',
+            });
+            console.error('❌ 뉴스 데이터 요청 실패:', error);
+        }
+    };
+
+    const onClickClearPreDataBtn = async () => {
+        try {
+            await deleteAllDataFromClient('pre_news_items');
+
+            successToast({
+                title: '1차 DB 초기화 성공',
+                description: '1차 DB 데이터가 전부 삭제되었습니다.',
+            });
+
+            setAvailableData([]);
+            setSelectedData([]);
+        } catch (error) {
+            errorToast({
+                title: '1차 DB 초기화 실패',
+                description: '1차 DB 전체 삭제 중 오류가 발생했습니다.',
+            });
+        }
+    };
+
     return (
-        <div className="w-4/5 mx-auto">
-            <div id="apiRequestSearchBar" className="flex items-center gap-3 my-4">
-                <div className="flex gap-4 bg-zinc-200 py-3 px-5">
-                    <div className="flex gap-1">
-                        <Label htmlFor="searchWord" className="flex items-center">
-                            검색어
-                        </Label>
-                        <Input id="searchWord" className="w-36" variant="admin" />
-                    </div>
-                    <div className="flex gap-1">
-                        <Label htmlFor="count" className="flex items-center">
-                            개수
-                        </Label>
-                        <Select defaultValue="10">
-                            <SelectTrigger id="count" variant="admin" className="w-32 bg-dot-white">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="10">10</SelectItem>
-                                <SelectItem value="50">50</SelectItem>
-                                <SelectItem value="100">100</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <div className="flex gap-1">
-                        <Label htmlFor="sort" className="flex items-center">
-                            정렬
-                        </Label>
-                        <Select defaultValue="date">
-                            <SelectTrigger id="sort" variant="admin" className="w-32 bg-dot-white">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="date">최신순</SelectItem>
-                                <SelectItem value="sim">정확도순</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
+        <div className="w-4/5 mx-auto flex flex-col justify-center">
+            {isLoading ? (
+                <div className="flex justify-center items-center py-20">
+                    <Loader2 className="animate-spin" size={48} />
                 </div>
-                <Button onClick={onClickAPIRequestBtn} variant="admin" className="">
-                    뉴스 API 호출
-                </Button>
-            </div>
-
-            <div id="contentWrap" className="flex gap-5">
-                <div id="beforeSelected" className="w-2/5">
-                    <div id="apiRequestSearchBar" className="flex items-center gap-4">
-                        <div className="flex gap-2">
-                            <Label htmlFor="category" className="flex items-center">
-                                카테고리
-                            </Label>
-                            <Select defaultValue="health">
-                                <SelectTrigger
-                                    id="category"
+            ) : (
+                <>
+                    <div
+                        id="apiRequestSearchBar"
+                        className="flex justify-center items-center gap-3 my-6"
+                    >
+                        <div className="flex gap-4 bg-zinc-200 py-3 px-5">
+                            <div className="flex gap-1">
+                                <Label htmlFor="searchWord" className="flex items-center">
+                                    검색어
+                                </Label>
+                                <Input
+                                    id="searchWord"
+                                    type="text"
+                                    placeholder="검색어 입력"
+                                    value={searchWord}
+                                    onChange={e => setSearchWord(e.target.value)}
+                                    className="w-36"
                                     variant="admin"
-                                    className="w-20 bg-dot-white"
+                                />
+                            </div>
+                            <div className="flex gap-1">
+                                <Label htmlFor="size" className="flex items-center">
+                                    개수
+                                </Label>
+                                <Select
+                                    defaultValue={String(selectedSize)}
+                                    onValueChange={value => setSelectedSize(Number(value))}
                                 >
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {categoryOptions.map(category => (
-                                        <SelectItem key={category.value} value={category.value}>
-                                            {category.label}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                                    <SelectTrigger
+                                        id="size"
+                                        variant="admin"
+                                        className="w-32 bg-dot-white"
+                                    >
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="10">10</SelectItem>
+                                        <SelectItem value="50">50</SelectItem>
+                                        <SelectItem value="100">100</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="flex gap-1">
+                                <Label htmlFor="sort" className="flex items-center">
+                                    정렬
+                                </Label>
+                                <Select defaultValue={selectedSort} onValueChange={setSelectedSort}>
+                                    <SelectTrigger
+                                        id="sort"
+                                        variant="admin"
+                                        className="w-32 bg-dot-white"
+                                    >
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="date">최신순</SelectItem>
+                                        <SelectItem value="sim">정확도순</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
                         </div>
-                        <div className="flex gap-2">
-                            <Label htmlFor="species" className="flex items-center">
-                                종
-                            </Label>
-                            <Select defaultValue="dog">
-                                <SelectTrigger
-                                    id="species"
-                                    variant="admin"
-                                    className="w-32 bg-dot-white"
-                                >
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {speciesOptions.map(species => (
-                                        <SelectItem key={species.value} value={species.value}>
-                                            {species.label}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
-                    </div>
-
-                    <AdminNewletterCollectTable
-                        header={leftHeader}
-                        data={availableData}
-                        side="left"
-                        onCheckboxChange={handleCheckboxChange}
-                        selectedIds={selectedIds}
-                    />
-                </div>
-                <MoveRight className="mt-40" />
-                <div id="afterSelected" className="w-2/5">
-                    <div id="btnWrap" className="flex gap-4 justify-end">
-                        <Button onClick={onClickSaveDBBtn} variant="admin" className="">
-                            DB에 저장
-                        </Button>
-                        <Button onClick={onClickClearSheetBtn} variant="admin" className="">
-                            스프레드시트 초기화
+                        <Button onClick={onClickAPIRequestBtn} variant="admin" className="">
+                            뉴스 API 호출
                         </Button>
                     </div>
 
-                    <div className="w-full">
-                        <AdminNewletterCollectTable
-                            header={rightHeader}
-                            data={selectedData}
-                            side="right"
-                            onCheckboxChange={handleCheckboxChange}
-                            selectedIds={selectedIds}
-                        />
+                    <div id="contentWrap" className="flex gap-4 justify-between">
+                        <div id="beforeSelected" className="w-2/5">
+                            <div id="apiRequestSearchBar" className="flex items-center gap-4">
+                                <div className="flex gap-2">
+                                    <Label htmlFor="category" className="flex items-center">
+                                        카테고리
+                                    </Label>
+                                    <Select
+                                        defaultValue={selectedCategory}
+                                        onValueChange={setSelectedCategory}
+                                    >
+                                        <SelectTrigger
+                                            id="category"
+                                            variant="admin"
+                                            className="w-20 bg-dot-white"
+                                        >
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem key="all" value="all">
+                                                전체
+                                            </SelectItem>
+                                            {Object.entries(categoryOptions.labelMap).map(
+                                                ([categoryId, categoryDescription]) => (
+                                                    <SelectItem
+                                                        key={categoryId}
+                                                        value={categoryDescription}
+                                                    >
+                                                        {categoryDescription}
+                                                    </SelectItem>
+                                                ),
+                                            )}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="flex gap-2">
+                                    <Label htmlFor="species" className="flex items-center">
+                                        종
+                                    </Label>
+                                    <Select
+                                        defaultValue={selectedSpecies}
+                                        onValueChange={setSelectedSpecies}
+                                    >
+                                        <SelectTrigger
+                                            id="species"
+                                            variant="admin"
+                                            className="w-32 bg-dot-white"
+                                        >
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem key="all" value="all">
+                                                전체
+                                            </SelectItem>
+                                            {Object.entries(speciesOptions.labelMap).map(
+                                                ([speciesId, speciesDescription]) => (
+                                                    <SelectItem
+                                                        key={speciesId}
+                                                        value={speciesDescription}
+                                                    >
+                                                        {speciesDescription}
+                                                    </SelectItem>
+                                                ),
+                                            )}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </div>
+
+                            <AdminNewletterCollectTable
+                                header={leftHeader}
+                                data={filteredData}
+                                side="left"
+                                onCheckboxChange={handleCheckboxChange}
+                                selectedIds={selectedIds}
+                            />
+                        </div>
+                        <MoveRight className="mt-40" />
+                        <div id="afterSelected" className="w-3/5">
+                            <div id="btnWrap" className="flex gap-4 justify-end">
+                                <Button onClick={onClickSaveDBBtn} variant="admin" className="">
+                                    DB에 저장
+                                </Button>
+                                <Button
+                                    onClick={onClickClearPreDataBtn}
+                                    variant="admin"
+                                    className=""
+                                >
+                                    1차 데이터 초기화
+                                </Button>
+                            </div>
+
+                            <div className="w-full">
+                                <AdminNewletterCollectTable
+                                    header={rightHeader}
+                                    data={selectedData}
+                                    side="right"
+                                    onCheckboxChange={handleCheckboxChange}
+                                    selectedIds={selectedIds}
+                                />
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                </>
+            )}
         </div>
     );
 }
