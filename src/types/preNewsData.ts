@@ -6,8 +6,7 @@ export interface RawPreNewsItem {
     title: string;
 }
 
-export interface InsertPreNewsItem {
-    pre_news_id?: string;
+interface BasePreNewsItem {
     description: string;
     link: string;
     originallink: string;
@@ -18,4 +17,12 @@ export interface InsertPreNewsItem {
     category_id: string | null;
     species: string | null;
     species_id: string | null;
+}
+
+export interface InsertPreNewsItem extends BasePreNewsItem {
+    pre_news_id?: string;
+}
+
+export interface PreNewsItem extends BasePreNewsItem {
+    pre_news_id: string | null;
 }

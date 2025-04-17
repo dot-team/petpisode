@@ -6,7 +6,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/common/Table/Table';
-import { PreNewsItem } from '@/hooks/usePreNewsItem';
+import { PreNewsItem } from '@/types/preNewsData';
 import React from 'react';
 
 interface TableProps {

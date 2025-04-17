@@ -11,12 +11,13 @@ import {
 } from '@/components/common/Select/Select';
 import { useErrorToast, useSuccessToast } from '@/hooks';
 import useFetchOptions from '@/hooks/useFetchOptions';
-import { fetchPreNewsData } from '@/hooks/useRawPreNewsData';
-import usePreNewsItem, { PreNewsItem } from '@/hooks/usePreNewsItem';
+import usePreNewsItem from '@/hooks/usePreNewsItem';
 import { createMultipleDataFromClient, deleteAllDataFromClient } from '@/services';
 import { Loader2, MoveRight } from 'lucide-react';
 import React, { useEffect, useMemo, useState } from 'react';
-import { createNewsItems } from './transformData';
+import { fetchPreNewsData } from '@/services/preNewsService';
+import { PreNewsItem } from '@/types/preNewsData';
+import { createNewsItems } from '@/services/transformNewsData';
 
 const leftHeader = ['제목', '게시일자'];
 const rightHeader = ['제목', '게시일자', '카테고리', '종'];
@@ -238,7 +239,7 @@ function NewsletterCollect() {
                                             <SelectItem key="all" value="all">
                                                 전체
                                             </SelectItem>
-                                            {Object.entries(categoryOptions.categoryMap).map(
+                                            {Object.entries(categoryOptions.labelMap).map(
                                                 ([categoryId, categoryDescription]) => (
                                                     <SelectItem
                                                         key={categoryId}
@@ -270,7 +271,7 @@ function NewsletterCollect() {
                                             <SelectItem key="all" value="all">
                                                 전체
                                             </SelectItem>
-                                            {Object.entries(speciesOptions.speciesMap).map(
+                                            {Object.entries(speciesOptions.labelMap).map(
                                                 ([speciesId, speciesDescription]) => (
                                                     <SelectItem
                                                         key={speciesId}

@@ -1,63 +1,70 @@
 import { useEffect, useState } from 'react';
 import { fetchAllDataFromClient } from '@/services';
+import { KeywordOptions } from '@/types/keywordOption';
 
 const useFetchOptions = () => {
-    const [categoryOptions, setCategoryOptions] = useState<{
-        categoryKeywordMap: Record<string, string[]>;
-        categoryMap: Record<string, string>;
-    }>({
-        categoryKeywordMap: {},
-        categoryMap: {},
+    const [categoryOptions, setCategoryOptions] = useState<KeywordOptions>({
+        keywordMap: {},
+        labelMap: {},
     });
-
-    const [speciesOptions, setSpeciesOptions] = useState<{
-        speciesKeywordMap: Record<string, string[]>;
-        speciesMap: Record<string, string>;
-    }>({
-        speciesKeywordMap: {},
-        speciesMap: {},
+    const [speciesOptions, setSpeciesOptions] = useState<KeywordOptions>({
+        keywordMap: {},
+        labelMap: {},
     });
 
     useEffect(() => {
         const fetchOptions = async () => {
-            const categories = await fetchAllDataFromClient('news_categories');
-            const categoryKeywords = await fetchAllDataFromClient('category_keywords');
+            // 카테고리 & 키워드 동시 요청
+            const [categories, categoryKeywords] = await Promise.all([
+                fetchAllDataFromClient('news_categories'),
+                fetchAllDataFromClient('category_keywords'),
+            ]);
 
-            const categoryKeywordMap: Record<string, string[]> = {};
-            categoryKeywords.forEach(keyword => {
-                const categoryId = keyword.category_id;
-                if (!categoryKeywordMap[categoryId]) {
-                    categoryKeywordMap[categoryId] = [];
-                }
-                categoryKeywordMap[categoryId].push(keyword.keyword_name);
+            // categoryOptions 세팅
+            setCategoryOptions({
+                keywordMap: categoryKeywords.reduce(
+                    (acc, { category_id, keyword_name }) => {
+                        if (!acc[category_id]) acc[category_id] = [];
+                        acc[category_id].push(keyword_name);
+                        return acc;
+                    },
+                    {} as Record<string, string[]>,
+                ),
+
+                labelMap: categories.reduce(
+                    (acc, { category_id, description }) => {
+                        acc[category_id] = description;
+                        return acc;
+                    },
+                    {} as Record<string, string>,
+                ),
             });
 
-            const categoryMap: Record<string, string> = {};
-            categories.forEach(category => {
-                categoryMap[category.category_id] = category.description;
+            // 종 & 키워드 동시 요청
+            const [species, speciesKeywords] = await Promise.all([
+                fetchAllDataFromClient('news_species'),
+                fetchAllDataFromClient('species_keywords'),
+            ]);
+
+            // speciesOptions 세팅
+            setSpeciesOptions({
+                keywordMap: speciesKeywords.reduce(
+                    (acc, { species_id, keyword_name }) => {
+                        if (!acc[species_id]) acc[species_id] = [];
+                        acc[species_id].push(keyword_name);
+                        return acc;
+                    },
+                    {} as Record<string, string[]>,
+                ),
+
+                labelMap: species.reduce(
+                    (acc, { species_id, description }) => {
+                        acc[species_id] = description;
+                        return acc;
+                    },
+                    {} as Record<string, string>,
+                ),
             });
-
-            setCategoryOptions({ categoryKeywordMap, categoryMap });
-
-            // 종 데이터 가져오기
-            const species = await fetchAllDataFromClient('news_species');
-            const speciesKeywords = await fetchAllDataFromClient('species_keywords');
-
-            const speciesKeywordMap: Record<string, string[]> = {};
-            speciesKeywords.forEach(keyword => {
-                const speciesId = keyword.species_id;
-                if (!speciesKeywordMap[speciesId]) {
-                    speciesKeywordMap[speciesId] = [];
-                }
-                speciesKeywordMap[speciesId].push(keyword.keyword_name);
-            });
-
-            const speciesMap: Record<string, string> = {};
-            species.forEach(sp => {
-                speciesMap[sp.species_id] = sp.description;
-            });
-
-            setSpeciesOptions({ speciesKeywordMap, speciesMap });
         };
 
         fetchOptions();

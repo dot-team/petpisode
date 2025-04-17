@@ -1,19 +1,6 @@
 import { useEffect, useState } from 'react';
 import { fetchAllDataFromClient } from '@/services';
-
-export interface PreNewsItem {
-    pre_news_id: string | null;
-    description: string;
-    link: string;
-    originallink: string;
-    pubDate: string;
-    title: string;
-    created_at: string;
-    category: string | null;
-    category_id: string | null;
-    species: string | null;
-    species_id: string | null;
-}
+import { PreNewsItem } from '@/types/preNewsData';
 
 const usePreNewsItem = () => {
     const [data, setData] = useState<PreNewsItem[]>([]);
