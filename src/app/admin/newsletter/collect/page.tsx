@@ -13,11 +13,7 @@ import { useErrorToast, useSuccessToast } from '@/hooks';
 import useFetchOptions from '@/hooks/useFetchOptions';
 import { fetchPreNewsData } from '@/hooks/useRawPreNewsData';
 import usePreNewsItem, { PreNewsItem } from '@/hooks/usePreNewsItem';
-import {
-    createMultipleDataFromClient,
-    createPreNewsItems,
-    deleteAllDataFromClient,
-} from '@/services';
+import { createMultipleDataFromClient, deleteAllDataFromClient } from '@/services';
 import { Loader2, MoveRight } from 'lucide-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { createNewsItems } from './transformData';
@@ -89,7 +85,6 @@ function NewsletterCollect() {
             );
 
             await createMultipleDataFromClient('pre_news_items', data);
-            createPreNewsItems(data);
 
             successToast({
                 title: '네이버 뉴스 API 호출 성공',

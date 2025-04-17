@@ -1,11 +1,6 @@
 import axios from 'axios';
 import { TableColumn, TableData, TableName, TablesInsert, TablesUpdate } from '@/types';
 import { SUPABASE_ENDPOINT } from '@/constants/endpoints';
-import { createClient } from '@supabase/supabase-js';
-import { InsertPreNewsItem } from '@/types/preNewsData';
-
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
 export const fetchAllDataFromClient = async <T extends TableName>(
     table: T,
@@ -51,20 +46,6 @@ export const createMultipleDataFromClient = async <T extends TableName>(
         }
         throw error;
     }
-};
-
-export const supabase = createClient<TableName>(SUPABASE_URL, SUPABASE_KEY, {
-    auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: true,
-    },
-});
-
-export const createPreNewsItems = async (data: InsertPreNewsItem[]) => {
-    const { data: supaData, error } = await supabase.from('pre_news_items').insert(data);
-    if (error) throw error;
-    return supaData;
 };
 
 export const updateDataByIdFromClient = async <T extends TableName>(
